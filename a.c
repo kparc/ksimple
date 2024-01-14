@@ -14,11 +14,11 @@
                                                     //! cc -w ..       build it like so
 
 //!printing facilities
-f(w,write(1,ax?(u)&x:x,ax?1:strlen(x)))             //!< (w)rite to stdout: if x is an atom, print its decimal value, otherwise print x as ascii string.
+f(w,write(1,ax?(c*)&x:sx,ax?1:strlen(sx)))          //!< (w)rite to stdout: if x is an atom, print its decimal value, otherwise print x as ascii string.
 c b[12];                                            //!< temporary string (b)uffer for storing a formatted vector item.
                                                     //!< \note it is fine to declare it globally, since k/simple runs on a single thread.
 
-f(si,sprintf(b,"%d ",128>x?x:x-256);b)              //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
+f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));(u)b)    //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
                                                     //!< if x is in 0..127 print it as is, otherwise offset it by 256 into the negative range.
 f(wi,w(si(x)))                                      //!< (w)rite (i)nteger: format x and (w)rite it to stdout.
 f(w_,$(ax,wi(x))i(nx,wi(xi))w(10))                  //!< (w)rite to repl: if x is an atom, format and print it, otherwise do the same for all items of x,
@@ -56,8 +56,8 @@ F(At,Qr(af)ax?sf[x]:r(nx,sf[xi]))f(at,At(x,0))
 
 //!verb dispatch
 char*V=" +-!#,@";                                    //!< string which holds interpretable k verbs. 0'th item (space) is nop.
-u(*f[])()={0,foo,sub,ind,cnt,cat,at},                //!< f is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
- (*F[])()={0,Add,Sub,Ind,Cnt,Cat,At},                //!< ditto for dyadic versions of verbs listed in V.
+u(*f[])(u)={0,foo,sub,ind,cnt,cat,at},                //!< f is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
+ (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},                //!< ditto for dyadic versions of verbs listed in V.
  U[26];                                              //!< array of global variables abcd..xyz (nyi, warrants a separate discussion)
 
 //!combination of V, f[] and F[] translates to the following matrix:
@@ -75,6 +75,6 @@ u(*f[])()={0,foo,sub,ind,cnt,cat,at},                //!< f is an array of point
 f(v,(strchr(V,x)?:V)-V)
 f(n,10>x-48?x-48:U[x-97])
 us(e,u i=*s++;v(i)?x(e(s),Q(x)f[v(i)](x)):x(n(i),*s?y(e(s+1),Q(y)F[v(*s)](x,y)):x))
-int main(){w("k/simple (c) 2024 atw/kpc"),w(10);char s[99];while(1)if(w(32),s[read(0,s,99)-1]=0,*s)w_(e(s));}
+int main(){char s[99];w((u)"k/simple (c) 2024 atw/kpc\n");while(1)if(w(32),s[read(0,s,99)-1]=0,*s)w_(e(s));}
 
 //:~

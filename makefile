@@ -1,3 +1,3 @@
 all:
-	@cc -Os -oa a.c -w
+	@cc -Os -oa a.c -Werror -Wno-pointer-sign
 	@./a
