@@ -36,7 +36,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
                                                          //!< (l-/r-values are fundamental to c, (l)eft/(r)ight is a good mnemonic but it is not precise)
 
 //!functions
-#define _u(f,e,x...) u f(x){R _(e);}                     //!< generic function definition: all functions return some u, f function name, x args, e body
+#define _u(f,e,x...) u f(x){R(u)_(e);}                   //!< generic function definition: all functions return some u, f function name, x args, e body
 #define f(g,e) _u(g,e,u x)                               //!< define a monadic function g: takes arg x of type u and returns some u, e is body
 #define F(g,e) _u(g,e,u f,u x)                           //!< define a dyadic function g: takes args f and x of type u, returns some u, or:
                                                          //!< define an adverb g: takes function pointer f to some verb and its only arg x (nyi)

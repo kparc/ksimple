@@ -18,7 +18,7 @@ f(w,write(1,ax?(c*)&x:sx,ax?1:strlen(sx)))          //!< (w)rite to stdout: if x
 c b[12];                                            //!< temporary string (b)uffer for storing a formatted vector item.
                                                     //!< \note it is fine to declare it globally, since k/simple runs on a single thread.
 
-f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));(u)b)    //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
+f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));b)       //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
                                                     //!< if x is in 0..127 print it as is, otherwise offset it by 256 into the negative range.
 f(wi,w(si(x)))                                      //!< (w)rite (i)nteger: format x and (w)rite it to stdout.
 f(w_,$(ax,wi(x))i(nx,wi(xi))w(10))                  //!< (w)rite to repl: if x is an atom, format and print it, otherwise do the same for all items of x,
