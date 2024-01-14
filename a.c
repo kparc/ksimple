@@ -55,9 +55,9 @@ F(Cat,f=af?cat(f):f;x=ax?cat(x):x;u r=a(nf+nx);m(nx,r+nf,x);m(nf,r,f))
 F(At,Qr(af)ax?sf[x]:r(nx,sf[xi]))f(at,At(x,0))
 
 //!verb dispatch
-char*V=" +-!#,@";                                    //!< string which holds interpretable k verbs. 0'th item (space) is nop.
-u(*f[])(u)={0,foo,sub,ind,cnt,cat,at},                //!< f is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
- (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},                //!< ditto for dyadic versions of verbs listed in V.
+char*V=" +-!#,@";                                    //!< string which holds tokens of interpretable k verbs. 0'th item (space) is nop.
+u(*f[])(u)={0,foo,sub,ind,cnt,cat,at},               //!< f is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
+ (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},             //!< ditto for dyadic versions of verbs listed in V.
  U[26];                                              //!< array of global variables abcd..xyz (nyi, warrants a separate discussion)
 
 //!combination of V, f[] and F[] translates to the following matrix:
