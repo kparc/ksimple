@@ -52,12 +52,6 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 #define x(a,e) _(u x=a;e)                                //!< whatever a is, call it x and then execute some expression e in a separate lexical scope
 #define y(a,e) _(u y=a;e)                                //!< (ditto for y) idea of x()/y() is to make use of standard accessors eg ax xi etc
 
-//!error handling
-u Q=96;                                                  //!< Q is magic number for error
-#define Q(e)  if(Q==(e))R Q;                             //!< if some e evaluates to Q, return error
-#define Qr(e) if(e){R err((u)__func__,(u)"rank");}       //!< if some e evaluates to true, throw rank error
-#define Qz(e) if(e){R err((u)__func__,(u)"nyi");}        //!< ditto for not yet implemented
-
 //!accessors for r
 #define sr x(r,sx)                                       //!< reinterpret r as char pointer (ie as string or byte vector) \see sx
 #define ri sr[i]                                         //!< get i'th element of vector r \todo consider using xi for bound check
@@ -67,6 +61,12 @@ u Q=96;                                                  //!< Q is magic number 
 #define nf x(f,nx)                                       //!< length of vector f
 #define sf x(f,sx)                                       //!< reinterpret r as char pointer (ie as string or byte vector)
 #define fi x(f,xi)                                       //!< return i'th element of vector f or 0 if i is out of bounds
+
+//!error handling
+u Q=96;                                                  //!< Q is magic number for error (ascii backtick)
+#define Q(e)  if(Q==(e))R Q;                             //!< if some e evaluates to Q, return error
+#define Qr(e) if(e){R err((u)__func__,(u)"rank");}       //!< if some e evaluates to true, throw rank error
+#define Qz(e) if(e){R err((u)__func__,(u)"nyi");}        //!< ditto for not yet implemented
 
 //!simplest example of how it all works together:
 #define r(n,e) _(u r=a(n);i(n,ri=e)r)                    //!< (a)llocate a new vector r of size n, then apply some expression e to it, then return r.
