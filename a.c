@@ -43,7 +43,7 @@ f(ind,Qr(!ax)r(x,i))                                //!< monadic (ind)ex is her 
 
 f(cnt,Qr(ax)nx)                                     //!< monadic (c)ou(nt) is #x. it returns the length of a given vector and throws rank error for atoms.
 
-f(cat,Qr(!ax)r(1,x))                                //!< monadic (cat)enate is enlist, or comma-x: it wraps a given atom x into a new vector of length 1 which
+f(cat,Qr(!ax)r(1,x))                                //!< monadic (cat)enate is enlist, or comma-x: it wraps a given atom x into a new vector of length 1 whose
                                                     //!< only item holds the value that atom. if x is a vector, enlist will throw a rank error.
 
 //!dyadic verbs \todo
