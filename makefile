@@ -1,2 +1,3 @@
 all:
-	cc -Os -oa a.c -w
+	@cc -Os -oa a.c -w
+	@./a
