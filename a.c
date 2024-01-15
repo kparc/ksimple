@@ -81,34 +81,37 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of poi
 
                                                      //!< transposition of V, f[] and F[] gives the following matrix:
 
-                                                     //!<    verb   monad    dyad     semantics
-                                                     //!<       +   foo      Add      nyi   add
-                                                     //!<       -   sub      Sub      neg   sub
-                                                     //!<       !   ind      Ind      til   mod
-                                                     //!<       #   cnt      Cnt      cnt   tak
-                                                     //!<       ,   cat      Cat      enl   cat
-                                                     //!<       @   at       At       fst   at
+                                                     //!<  verb   monadic  dyadic  semantics
+                                                     //!<     +   foo      Add     nyi   add
+                                                     //!<     -   sub      Sub     neg   sub
+                                                     //!<     !   ind      Ind     til   mod
+                                                     //!<     #   cnt      Cnt     cnt   tak
+                                                     //!<     ,   cat      Cat     enl   cat
+                                                     //!<     @   at       At      fst   at
 
 f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
                                                      //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
 f(n,10>x-48?x-48:U[x-97])                            //!< is x a (n)oun? valid nouns are digits 0..9 or lowercase ascii chars abc..xyz.
 
-us(e,                                                //!< (e)val tokenizes input tape s recursively, executes it and returns the result
-    u i=*s++;                                        //!< i is the current token. on each recursion step, the tape is advanced by 1 token.
-    v(i)?x(                                          //!< in case i is a verb:
-          e(s),                                      //!< recursively evaluate next token and put result into x.
-          Q(x)                                       //!< if x evaluated to error code, return it.
-          f[v(i)](x))                                //!< execute monadic verb i with argument x and return the result.
-        :x(                                          //!< if i is not a verb, it must be a noun:
-          n(i),                                      //!< if i is a digit, e.g. '7', assign its decimal value to x.
-                                                     //!< if i is a varname, e.g. 'a', x is assigned to its current value taken from U[].
-          *s?y(e(s+1),Q(y)F[v(*s)](x,y)):x))         //!< \todo
+us(e,                                                //!< (e)val: recursively tokenize input tape s, evaluate it and return the final result:
+    u i=*s++;                                        //!< read the current token into i and advance tape forward by one.
+    v(i)?x(                                          //!< in case if i is a valid verb:
+          e(s),Q(x)                                  //!<  recursively evaluate next token after i and put result into x. if x is error code, bail out.
+          f[v(i)](x))                                //!<  apply monadic verb i to the operand x and return the result, which can be either noun or error.
+        :x(                                          //!< in case if i is not a verb, it must be a noun, i.e.:
+          n(i),                                      //!<  if i is a digit, e.g. '7', assign x to its decimal value.
+                                                     //!<  if i is a varname, e.g. 'a', assign x to a corresponding value from U[26].
+          *s?y(                                      //!<  if the noun is not the last token on tape, we assume the next token could only be a verb, therefore we
+               e(s+1),Q(y)                           //!<  recursively evaluate a token AFTER the next one, and put result into y. if y is error code, bail out.
+                                                     //!<  at this point, x and y hold nouns from left and right of the next token, therefore:
+               F[v(*s)](x,y))                        //!<  treat the next token as dyadic verb and apply it to x and y. return valie can be either noun or error.
+            :x))                                     //!< end of tape: return the noun in x.
 
-int main(){char s[99];                               //!< entry point: k/simple accepts no arguments, buffer s holds repl input (max 99 chars).
+int main(){c s[99];                                  //!< entry point: k/simple accepts no arguments, buffer s holds repl input (max 99 chars).
  w((u)"k/simple (c) 2024 atw/kpc mit"),w(10);        //!< write startup banner, copyright and license, followed by a newline (ascii 10).
  while(1)                                            //!< enter repl (read-eval-print loop) forever until ctrl+c or segfault is caught.
   if(w(32),s[read(0,s,99)-1]=0,*s)                   //!< write prompt (single space), then wait for input from stdin which is read into s.
-    w_(e(s));                                        //!< (e)valuate input, pretty-print the result to stdout and cycle the repl.
+    w_(e(s));                                        //!< (e)valuate input, pretty-print the result to stdout, and cycle the repl.
                                                      //!< \note that the last byte of repl input is forced to null byte aka sentinel value.
  R 0;}                                               //!< in c, main() must return an exit code of the process (0 is 'success' by convention).
 
