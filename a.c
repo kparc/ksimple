@@ -58,7 +58,7 @@ F(Add,ax?af?(c)(f+x)                                //!< case a+a: if (f,x) are 
                                                     //!<           \note the inequality test is nx-nf instead of nx!=nf, which is a staple convention in atwc.
 
 F(Sub,Add(f,sub(x)))                                //!< dyadic x-y is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
-F(Ind,Qr(!f)r(nx,xi%f))
+F(Ind,Qr(!f||!af)ax?x%f:r(nx,xi%f))                 //!< dyadic x!y is y (mod)ulo x, aka remainder operation. f must be an non-zero atom, x can be anything.
 F(Cnt,Qr(!af)r(f,ax?x:xi))
 F(Cat,f=af?cat(f):f;x=ax?cat(x):x;u r=a(nf+nx);m(nx,r+nf,x);m(nf,r,f))
 F(At,Qr(af)ax?sf[x]:r(nx,sf[xi]))
@@ -68,7 +68,7 @@ f(at,At(x,0))
 char*V=" +-!#,@";                                    //!< V is a string which holds tokens of all supported k verbs. 0'th item (space) is nop.
 u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
  (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},             //!< F[] is ditto for dyadic versions of verbs listed in V.
- U[26];                                              //!< array of global variables abc..xyz \todo
+ U[26];                                              //!< array of global variables abc..xyz. in c, global arrays are initialized with zeroes.
 
                                                      //!< transposition of V, f[] and F[] gives the following matrix:
 
@@ -76,18 +76,32 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of poi
                                                      //!<           0          0          nop   nop
                                                      //!<       +   foo        Add        nyi   add
                                                      //!<       -   sub        Sub        neg   sub
-                                                     //!<       !   ind        Ind        til
+                                                     //!<       !   ind        Ind        til   mod
                                                      //!<       #   cnt        Cnt        cnt
                                                      //!<       ,   cat        Cat        enl   cat
                                                      //!<       @   at         At         fst
 
-f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid verb from V? if so, return its index, otherwise return 0.
-f(n,10>x-48?x-48:U[x-97])                            //!< is x a noun?  valid nouns are digits 0..9 and lowercase ascii abc..xyz.   \todo
+f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
+                                                     //!< \note a rarely seen ternary of the form x?:y, which is just a shortcut for x?x:y
+f(n,10>x-48?x-48:U[x-97])                            //!< is x a (n)oun? valid nouns are digits 0..9 or lowercase ascii chars abc..xyz.
 
-//!\todo
-us(e,u i=*s++;
-    v(i)?x(e(s),Q(x)f[v(i)](x))
-        :x(n(i),*s?y(e(s+1),Q(y)F[v(*s)](x,y)):x))
-int main(){char s[99];w((u)"k/simple (c) 2024 atw/kpc mit\n");while(1)if(w(32),s[read(0,s,99)-1]=0,*s)w_(e(s));}
+us(e,                                                //!< (e)val tokenizes input tape s recursively, executes it and returns the result
+    u i=*s++;                                        //!< i is the current token. on each recursion step, the tape is advanced by 1 token.
+    v(i)?x(                                          //!< in case i is a verb:
+          e(s),                                      //!< recursively evaluate next token and put result into x.
+          Q(x)                                       //!< if x evaluated to error code, return it.
+          f[v(i)](x))                                //!< execute monadic verb i with argument x and return the result.
+        :x(                                          //!< if i is not a verb, it must be a noun:
+          n(i),                                      //!< if i is a digit, e.g. '7', assign its decimal value to x.
+                                                     //!< if i is a varname, e.g. 'a', x is assigned to its current value taken from U[].
+          *s?y(e(s+1),Q(y)F[v(*s)](x,y)):x))         //!< \todo
+
+int main(){char s[99];                               //!< entry point: k/simple accepts no arguments, buffer s holds repl input (max 99 chars).
+ w((u)"k/simple (c) 2024 atw/kpc mit"),w(10);        //!< startup banner, copyright and license, followed by a newline (ascii 10).
+ while(1)                                            //!< enter repl (read-eval-print loop) forever until ctrl+c or segfault is caught.
+  if(w(32),s[read(0,s,99)-1]=0,*s)                   //!< write prompt (single space), then wait for input from stdin which is read into s.
+    w_(e(s));                                        //!< (e)valuate input, pretty-print the result to stdout and cycle the repl.
+                                                     //!< \note that the last byte of repl input is forced to null byte aka sentinel value.
+ R 0;}                                               //!< in c, main() must return an exit code of the process (0 is 'success' by convention).
 
 //:~
