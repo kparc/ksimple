@@ -15,7 +15,7 @@
 //!printing facilities
 f(w,write(1,ax?(c*)&x:sx,ax?1:strlen(sx)))          //!< (w)rite to stdout: if x is an atom, print its decimal value, otherwise print x as ascii string.
 c b[12];                                            //!< temporary string (b)uffer for storing a formatted vector item.
-                                                    //!< \note it is fine to declare it globally, since k/simple runs on a single thread.
+                                                    //!< \note it is fine to declare b globally, since k/simple runs on a single thread.
 
 f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));b)       //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
                                                     //!< if x is in 0..127 print it as is, otherwise offset it by 256 into the negative range.
@@ -45,27 +45,36 @@ f(cnt,Qr(ax)nx)                                     //!< monadic (c)ou(nt) is #x
 f(cat,Qr(!ax)r(1,x))                                //!< monadic (cat)enate is (enl)ist, or comma-x: wraps a given atom x into a new vector of length 1 whose
                                                     //!< only item holds the value of that atom. if x is a vector, enlist will throw a rank error.
 
-//!dyadic verbs
-//F(Add,ax?af?(c)(f+x):Add(x,f):                    //!< dyadic x+y is add. operands can be both atoms and verbs, ie. a+a, a+v, v+a, v+v are all valid.
-// af?_(i(nx,sx[i]+=f)x):nx-nf?Ql():r(nx,xi+fi))    //!< \note that in case of v+v addition of elements is pairwise, so vectors must be of same length.
-                                                    //!< in Add() we encounter what is infomally known as "ternary cascade", which takes time to get used to,
-                                                    //!< so let's reformat the function body to make the control flow a bit easier to follow:
-F(Add,ax?af?(c)(f+x)                                //!< case a+a: if (f,x) are atoms, compute their sum and handle possible overflows by downcasting it to c.
+//!dyadic verbs 
+F(Add,                                              //!< dyadic f+y is add. operands can be both atoms and verbs, ie. a+a, a+v, v+a, v+v are all valid.
+ ax?af?(c)(f+x)                                     //!< case a+a: if (f,x) are atoms, compute their sum and handle possible overflows by downcasting it to c.
            :Add(x,f)                                //!< case v+a: if f is a vector and x is an atom, make a recursive call with operands swapped, i.e. a+v.
         :af?_(i(nx,sx[i]+=f)x)                      //!< case a+v: if f is an atom, modify vector x in place by adding f to its every element and return x.
            :nx-nf?Ql()                              //!< case v+v: if (f,x) are vectors, first make sure they are of the same length, throw length error if not.
                  :r(nx,xi+fi))                      //!<           if lengths are the same, return a new vector holding their pairwise sum.
-                                                    //!<           \note the inequality test is nx-nf instead of nx!=nf, which is a staple convention in atwc.
+                                                    //!< \note by convention, atwc uses x-y for inequality test, which has the same effect as nx!=nf.
 
-F(Sub,Add(f,sub(x)))                                //!< dyadic x-y is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
-F(Ind,Qr(!f||!af)ax?x%f:r(nx,xi%f))                 //!< dyadic x!y is y (mod)ulo x, aka remainder operation. f must be an non-zero atom, x can be anything.
-F(Cnt,Qr(!af)r(f,ax?x:xi))
-F(Cat,f=af?cat(f):f;x=ax?cat(x):x;u r=a(nf+nx);m(nx,r+nf,x);m(nf,r,f))
-F(At,Qr(af)ax?sf[x]:r(nx,sf[xi]))
-f(at,At(x,0))
+F(Sub,Add(f,sub(x)))                                //!< dyadic f-x is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
+F(Ind,Qr(!f||!af)ax?x%f:r(nx,xi%f))                 //!< dyadic f!x is x (mod)ulo f, aka remainder operation. f must be an non-zero atom, x can be anything.
+F(Cnt,Qr(!af)r(f,ax?x:sx[i%nx]))                    //!< dyadic f#x is (tak)e, which has two variants based on the type of right opearnd (left must be atom):
+                                                    //!<  if x is a vector, return first f items of x. if f exceeds the size of x, wrap around from the start.
+                                                    //!<  if x is an atom, return a vector of length f filled with x.
+
+F(Cat,                                              //!< dyadic f,x is (cat)enate: a) join two vectors b) join an atom to vector c) make a vector from two atoms.
+  f=af?cat(f):f;                                    //!< if f is an atom, enlist it \ see cat()
+  x=ax?cat(x):x;                                    //!< ditto for x
+  u r=a(nf+nx);                                     //!< (a)llocate array r long enough to hold f and x.
+  m(nx,r+nf,x);m(nf,r,f))                           //!< (m)ove (or more precisely, copy) contents of f and x to r, one after another, and return pointer to r.
+
+F(At,Qr(af)ax?x>nf?Ql():sf[x]:r(nx,sf[xi]))         //!< dyadic f@x is "needle x in the haystack f" and has two modes based on the type of x (f must be a vector):
+                                                    //!<  if x is an atom, return the x'th item of f.
+                                                    //!<  if x is a vector, return a vector containg items from f at indices listed in x.
+                                                    //!< \note that the second mode currently doesn't perform the boundary check, fell free to implement it!
+
+f(at,At(x,0))                                       //<! monadic @x is (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //!verb dispatch
-char*V=" +-!#,@";                                    //!< V is a string which holds tokens of all supported k verbs. 0'th item (space) is nop.
+char*V=" +-!#,@";                                    //!< V is an array of tokens of all supported k verbs. 0'th item (space) is nop.
 u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
  (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},             //!< F[] is ditto for dyadic versions of verbs listed in V.
  U[26];                                              //!< array of global variables abc..xyz. in c, global arrays are initialized with zeroes.
@@ -77,9 +86,9 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of poi
                                                      //!<       +   foo        Add        nyi   add
                                                      //!<       -   sub        Sub        neg   sub
                                                      //!<       !   ind        Ind        til   mod
-                                                     //!<       #   cnt        Cnt        cnt
+                                                     //!<       #   cnt        Cnt        cnt   tak
                                                      //!<       ,   cat        Cat        enl   cat
-                                                     //!<       @   at         At         fst
+                                                     //!<       @   at         At         fst   at
 
 f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
                                                      //!< \note a rarely seen ternary of the form x?:y, which is just a shortcut for x?x:y
