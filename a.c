@@ -71,7 +71,7 @@ F(At,Qr(af)ax?x>nf?Ql():sf[x]:r(nx,sf[xi]))         //!< dyadic f@x is "needle x
                                                     //!<  if x is a vector, return a vector containg items from f at indices listed in x.
                                                     //!< \note that the second mode currently doesn't perform the boundary check, fell free to implement it!
 
-f(at,At(x,0))                                       //<! monadic @x is (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
+f(at,At(x,0))                                       //<! monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //!verb dispatch
 char*V=" +-!#,@";                                    //!< V is an array of tokens of all supported k verbs. 0'th item (space) is nop.
@@ -81,17 +81,16 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of poi
 
                                                      //!< transposition of V, f[] and F[] gives the following matrix:
 
-                                                     //!<    verb   monadic    dyadic     semantics
-                                                     //!<           0          0          nop   nop
-                                                     //!<       +   foo        Add        nyi   add
-                                                     //!<       -   sub        Sub        neg   sub
-                                                     //!<       !   ind        Ind        til   mod
-                                                     //!<       #   cnt        Cnt        cnt   tak
-                                                     //!<       ,   cat        Cat        enl   cat
-                                                     //!<       @   at         At         fst   at
+                                                     //!<    verb   monad    dyad     semantics
+                                                     //!<       +   foo      Add      nyi   add
+                                                     //!<       -   sub      Sub      neg   sub
+                                                     //!<       !   ind      Ind      til   mod
+                                                     //!<       #   cnt      Cnt      cnt   tak
+                                                     //!<       ,   cat      Cat      enl   cat
+                                                     //!<       @   at       At       fst   at
 
 f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
-                                                     //!< \note a rarely seen ternary of the form x?:y, which is just a shortcut for x?x:y
+                                                     //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
 f(n,10>x-48?x-48:U[x-97])                            //!< is x a (n)oun? valid nouns are digits 0..9 or lowercase ascii chars abc..xyz.
 
 us(e,                                                //!< (e)val tokenizes input tape s recursively, executes it and returns the result
@@ -106,7 +105,7 @@ us(e,                                                //!< (e)val tokenizes input
           *s?y(e(s+1),Q(y)F[v(*s)](x,y)):x))         //!< \todo
 
 int main(){char s[99];                               //!< entry point: k/simple accepts no arguments, buffer s holds repl input (max 99 chars).
- w((u)"k/simple (c) 2024 atw/kpc mit"),w(10);        //!< startup banner, copyright and license, followed by a newline (ascii 10).
+ w((u)"k/simple (c) 2024 atw/kpc mit"),w(10);        //!< write startup banner, copyright and license, followed by a newline (ascii 10).
  while(1)                                            //!< enter repl (read-eval-print loop) forever until ctrl+c or segfault is caught.
   if(w(32),s[read(0,s,99)-1]=0,*s)                   //!< write prompt (single space), then wait for input from stdin which is read into s.
     w_(e(s));                                        //!< (e)valuate input, pretty-print the result to stdout and cycle the repl.
