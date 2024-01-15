@@ -88,6 +88,6 @@ f(n,10>x-48?x-48:U[x-97])                            //!< is x a noun?  valid no
 us(e,u i=*s++;
     v(i)?x(e(s),Q(x)f[v(i)](x))
         :x(n(i),*s?y(e(s+1),Q(y)F[v(*s)](x,y)):x))
-int main(){char s[99];w((u)"k/simple (c) 2024 atw/kpc\n");while(1)if(w(32),s[read(0,s,99)-1]=0,*s)w_(e(s));}
+int main(){char s[99];w((u)"k/simple (c) 2024 atw/kpc mit\n");while(1)if(w(32),s[read(0,s,99)-1]=0,*s)w_(e(s));}
 
 //:~
