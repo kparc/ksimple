@@ -27,6 +27,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
                                                          //!< be 8 bytes wide. uintptr_t is basically sizeof(void*) and requires <stdint.h>.
                                                          //!< for simplicity, we keep u as ull for now.
 
+
 //!minimal atwc
 #define R return                                         //!< unclutter
 #define $(a,b) if(a)b;else                               //!< handy shorthand for if-then-else. beware of dangling else!
@@ -66,7 +67,6 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 #define fi x(f,xi)                                       //!< return i'th element of vector f or 0 if i is out of bounds
 
 //!error handling
-u Q=96;                                                  //!< Q is magic number for error (ascii for `backtick)
 #define Q(e)  if(Q==(e))R Q;                             //!< if some e evaluates to Q, return error
 #define Qr(e) if(e){R err((u)__func__,(u)"rank");}       //!< if some e evaluates to true, throw rank error
 #define Qz(e) if(e){R err((u)__func__,(u)"nyi");}        //!< ditto for not yet implemented
@@ -84,6 +84,7 @@ u Q=96;                                                  //!< Q is magic number 
                                                          //!< u f=r(8,pow(2,i));   //!< f is (1,2,4,8,16,32,64,128,256)
                                                          //!< u y=r(8,xi==fi);     //!< y is (0,1,1,0,0,0,0,0)
 
-u ba=(u)"k/simple (c) 2024 atw/kpc mit\n";               //!< startup banner
+u Q=96,                                                  //!< Q is magic number for error (ascii for `backtick)
+  ba=(u)"k/simple (c) 2024 atw/kpc mit\n";               //!< startup banner
 
 //:~

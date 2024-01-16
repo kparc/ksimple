@@ -47,11 +47,11 @@ f(cat,Qr(!ax)r(1,x))                                //!< monadic (cat)enate is (
 
 //!dyadic verbs 
 F(Add,                                              //!< dyadic f+y is add. operands can be both atoms and verbs, ie. a+a, a+v, v+a, v+v are all valid.
- ax?af?(c)(f+x)                                     //!< case a+a: if (f,x) are atoms, compute their sum and handle possible overflows by downcasting it to c.
-           :Add(x,f)                                //!< case v+a: if f is a vector and x is an atom, make a recursive call with operands swapped, i.e. a+v.
-        :af?_(i(nx,sx[i]+=f)x)                      //!< case a+v: if f is an atom, modify vector x in place by adding f to its every element and return x.
-           :nx-nf?Ql()                              //!< case v+v: if (f,x) are vectors, first make sure they are of the same length, throw length error if not.
-                 :r(nx,xi+fi))                      //!<           if lengths are the same, return a new vector holding their pairwise sum.
+  ax?af?(c)(f+x)                                    //!< case a+a: if (f,x) are atoms, compute their sum and handle possible overflows by downcasting it to c.
+       :Add(x,f)                                    //!< case v+a: if f is a vector and x is an atom, make a recursive call with operands swapped, i.e. a+v.
+    :af?_(i(nx,sx[i]+=f)x)                          //!< case a+v: if f is an atom, modify vector x in place by adding f to its every element and return x.
+       :nx-nf?Ql()                                  //!< case v+v: if (f,x) are vectors, first make sure they are of the same length, throw length error if not.
+             :r(nx,xi+fi))                          //!<           if lengths are the same, return a new vector holding their pairwise sum.
                                                     //!< \note by convention, atwc uses x-y for inequality test, which has the same effect as nx!=nf.
 
 F(Sub,Add(f,sub(x)))                                //!< dyadic f-x is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
@@ -71,49 +71,51 @@ F(At,Qr(af)ax?x>nf?Ql():sf[x]:r(nx,sf[xi]))         //!< dyadic f@x is "needle x
                                                     //!<  if x is a vector, return a vector containg items from f at indices listed in x.
                                                     //!< \note that the second mode currently doesn't perform the boundary check, fell free to implement it!
 
-f(at,At(x,0))                                       //<! monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
+f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //!verb dispatch
-char*V=" +-!#,@";                                    //!< V is an array of tokens of all supported k verbs. 0'th item (space) is nop.
-u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
- (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},             //!< F[] is ditto for dyadic versions of verbs listed in V.
- U[26];                                              //!< global namespace: array of values of variables abc..xyz. in c, global arrays are initialized with zeroes.
+char*V=" +-!#,@";                                   //!< V is an array of tokens of all supported k verbs. 0'th item (space) is nop.
+u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
+ (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},            //!< F[] is ditto for dyadic versions of verbs listed in V.
+ U[26];                                             //!< global namespace: array of values of variables abc..xyz. in c, global arrays are initialized with zeroes.
 
-                                                     //!< transposition of V, f[] and F[] gives the following matrix:
+                                                    //!< transposition of V, f[] and F[] gives the following matrix:
 
-                                                     //!<  verb   monadic  dyadic  semantics
-                                                     //!<     +   foo      Add     nyi   add
-                                                     //!<     -   sub      Sub     neg   sub
-                                                     //!<     !   ind      Ind     til   mod
-                                                     //!<     #   cnt      Cnt     cnt   tak
-                                                     //!<     ,   cat      Cat     enl   cat
-                                                     //!<     @   at       At      fst   at
+                                                    //!<  verb   monadic  dyadic  semantics
+                                                    //!<     +   foo      Add     nyi   add
+                                                    //!<     -   sub      Sub     neg   sub
+                                                    //!<     !   ind      Ind     til   mod
+                                                    //!<     #   cnt      Cnt     cnt   tak
+                                                    //!<     ,   cat      Cat     enl   cat
+                                                    //!<     @   at       At      fst   at
 
-f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
-                                                     //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
-f(g,x>='a'&&x<='z')                                  //!< is x a valid (g)lobal variable identifier?
-f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                     //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase ascii chars abc..xyz.
-                                                     //!< if i is a digit, e.g. '7', n() returns its decimal value.
-                                                     //!< if i is a varname, e.g. 'a', n() returns its value U[26].
+//!globals, verbs, nouns
+f(g,x>='a'&&x<='z')                                 //!< is x a valid (g)lobal variable identifier?
+f(v,(strchr(V,x)?:V)-V)                             //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
+                                                    //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
+f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                    //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase ascii chars abc..xyz.
+                                                    //!< if i is a digit, e.g. '7', n() returns its decimal value.
+                                                    //!< if i is a varname, e.g. 'a', n() returns its value U[26].
 
-us(e,                                                //!< (e)val: recursively tokenize input tape s, evaluate it and return the final result:
-    u i=*s++;                                        //!< read the current token into i and advance tape.
-    v(i)?x(                                          //!< in case if i is a valid verb:
-          e(s),Q(x)                                  //!<   recursively evaluate next token after i and put result into x. bail out on error.
-          f[v(i)](x))                                //!<   apply monadic verb i to the operand x and return the result, which can be either noun or error.
-        :x(n(i),Qp(Q==x)                             //!< in case if i is not a verb, it must be a valid noun, and we assign its value to x.
-           Qp(*s&&!v(*s))                            //!<   if there are more tokens on take, the next token after a noun can only be a verb.
-           *s?y(e(s+1),Q(y)                          //!<   recursively evaluate the token to the right of the verb and put result into y. bail out on error.
-                F[v(*s)](x,y))                       //!<   apply dyadic verb at *s to nouns x and y. return value can be noun or error.
-             :x))                                    //!<   end of tape: return the noun in x (last token can only be a noun).
+//! eval / repl
+us(e,                                               //!< (e)val: recursively tokenize input tape s, evaluate it and return the final result:
+    u i=*s++;                                       //!< read the current token into i and advance tape.
+    v(i)?x(                                         //!< in case if i is a valid verb:
+          e(s),Q(x)                                 //!<   recursively evaluate next token after i and put result into x. bail out on error.
+          f[v(i)](x))                               //!<   apply monadic verb i to the operand x and return the result, which can be either noun or error.
+        :x(n(i),Qp(Q==x)                            //!< in case if i is not a verb, it must be a valid noun, and we assign its value to x.
+           Qp(*s&&!v(*s))                           //!<   if there are more tokens on take, the next token after a noun can only be a verb.
+           *s?y(e(s+1),Q(y)                         //!<   recursively evaluate the token to the right of the verb and put result into y. bail out on error.
+                F[v(*s)](x,y))                      //!<   apply dyadic verb at *s to nouns x and y. return value can be noun or error.
+             :x))                                   //!<   end of tape: return the noun in x (last token can only be a noun).
 
-int main(){w(ba);c s[99];                            //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
- while(1)                                            //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
-  if(w(32),s[read(0,s,99)-1]=0,*s)                   //!< write prompt (single space), then wait for input from stdin which is read into s.
-    x(*s,x=g(x)&&s[1]==':'?x:0;                      //!< if input starts with global assignment e.g. a:42, retain variable name in x.
-      y(e(s+2*!!x),                                  //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
-       $(x&&y-Q,U[x-97]=y)                           //!< if assignment is pending and eval was successful, store result U and suppress output,
-        w_(y)));                                     //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
- R 0;}                                               //!< in c, main() must return an exit code of the process (by convention, 0 is 'success').
+int main(){c s[99];w(ba);                           //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
+  while(1)                                          //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
+   if(w(32),s[read(0,s,99)-1]=0,*s)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
+     x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:42, retain variable name in x.
+       y(e(s+2*!!x),                                //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
+        $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result U and suppress output,
+         w_(y)));                                   //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
+  R 0;}                                             //!< in c, main() must return an exit code of the process (by convention, 0 is 'success').
 
 //:~
