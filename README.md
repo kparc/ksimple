@@ -89,7 +89,7 @@ $ vim k.c
 
 [WIP]
 
-## suggested excercise
+## suggested exercise
 
 the authors hope that this material enables and inspires further experimentation on reader's own, which is a very rewarding and fun pastime. for example, one might consider the following toy problems of various degrees of difficulty:
 
