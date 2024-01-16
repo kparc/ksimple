@@ -86,4 +86,55 @@ $
 
 [WIP]
 
+## suggested excercise
+
+the authors hope that this material enables and inspires further experimentation on reader's own, which is a very rewarding and fun pastime. for example, one might consider the following toy problems of various degrees of difficulty:
+
+**simple:**
+
+* implement a few more simple verbs, e.g. dyadic `f*x`.
+* modify repl to support the exit command (traditionally, a double backslash `\\`)
+* add workspace size monitor (i.e. memory allocation) to e.g. prompt or via extra command (`\w`)
+
+**hurt me plenty:**
+
+* inspect verb implementations provided by atw for edge cases, and add checks (which are intentionally omitted)
+* extend maximum vector length to `MAX_UINT`
+* find and fix at least three segfaults
+
+**ultraviolence:**
+
+* change base type from 8bit integer to `signed long`
+* fix tokenizer to support integer numerals greater than 9 and less than 0
+* fix tokenizer to support efficient direct vector input (e.g. `42 57 1010` instead of `1,2,3,4`)
+* implement memory management by refcounting
+
+**nightmare:**
+
+* implement a simple parser (e.g. to support quoted strings and parens)
+* implement nested vectors, and verb `flip`
+* make vector arithmetic penetrating
+* implement adverbs `scan` and `over`
+
+**progress takes sacrifice:**
+
+* implement floating point type
+* implement functions and local scope 
+* implement a test suite for your `k`
+
+
+`//:~`
+
+
+
+
+
+
+
+
+
+
+
+
+
 
