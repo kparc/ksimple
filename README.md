@@ -45,8 +45,11 @@ this repository, which serve a number of purposes:
    in "exploded view" to simplify discussion of their control flow and role
    of individual components.
 
+   although the c code of `k/simple` is formatted to fit on mobile phone screens
+   in portrait mode, for a more comfortable reading experience we recommend
+   using professional equipment.
 
-4. with help of the included [makefile](/makefile), kparc's "essay" can
+5. with help of the included [makefile](/makefile), kparc's "essay" can
    be built to any available architecture, e.g. arm, riscv, wasm32 or extensa.
    default make target assumes presence of a recent gcc, clang or tinyc compiler.
    there are also two additional handy build targets: `make mm`, which
@@ -78,7 +81,7 @@ Add:length
  x@1,5,7
 1 5 7
  ^C
-$
+$ vim k.c
 
 ```
 
