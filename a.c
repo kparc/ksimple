@@ -20,7 +20,7 @@ c b[12];                                            //!< temporary string (b)uff
 f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));b)       //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
                                                     //!< if x is in 0..127 print it as is, otherwise offset it by 256 into the negative range.
 f(wi,w(si(x)))                                      //!< (w)rite (i)nteger: format x and (w)rite it to stdout.
-f(w_,$(ax,wi(x))i(nx,wi(xi))w(10))                  //!< (w)rite to repl: if x is an atom, format and print it, otherwise print all items of vector x,
+f(w_,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))              //!< (w)rite to repl: if x is an atom, format and print it, otherwise print all items of vector x,
                                                     //!< separated by space. terminate output by a newline aka ascii 10.
 F(err,w(f);w(58);w(x);w(10);Q)                      //!< throw error: print the name of the (f)unction where error occured, followed by colon(58),
                                                     //!< followed by error message x (eg "rank"/"nyi"), terminated by a newline. \return Q aka error code.
@@ -77,7 +77,7 @@ f(at,At(x,0))                                       //<! monadic @x is simply (f
 char*V=" +-!#,@";                                    //!< V is an array of tokens of all supported k verbs. 0'th item (space) is nop.
 u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
  (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},             //!< F[] is ditto for dyadic versions of verbs listed in V.
- U[26];                                              //!< array of global variables abc..xyz. in c, global arrays are initialized with zeroes.
+ U[26];                                              //!< global namespace: array of values of variables abc..xyz. in c, global arrays are initialized with zeroes.
 
                                                      //!< transposition of V, f[] and F[] gives the following matrix:
 
@@ -91,28 +91,29 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},             //!< f[] is an array of poi
 
 f(v,(strchr(V,x)?:V)-V)                              //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
                                                      //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
-f(n,10>x-48?x-48:U[x-97])                            //!< is x a (n)oun? valid nouns are digits 0..9 or lowercase ascii chars abc..xyz.
+f(g,x>='a'&&x<='z')                                  //!< is x a valid (g)lobal variable identifier?
+f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                     //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase ascii chars abc..xyz.
+                                                     //!< if i is a digit, e.g. '7', n() returns its decimal value.
+                                                     //!< if i is a varname, e.g. 'a', n() returns its value U[26].
 
 us(e,                                                //!< (e)val: recursively tokenize input tape s, evaluate it and return the final result:
-    u i=*s++;                                        //!< read the current token into i and advance tape forward by one.
+    u i=*s++;                                        //!< read the current token into i and advance tape.
     v(i)?x(                                          //!< in case if i is a valid verb:
-          e(s),Q(x)                                  //!<  recursively evaluate next token after i and put result into x. if x is error code, bail out.
-          f[v(i)](x))                                //!<  apply monadic verb i to the operand x and return the result, which can be either noun or error.
-        :x(                                          //!< in case if i is not a verb, it must be a noun, i.e.:
-          n(i),                                      //!<  if i is a digit, e.g. '7', assign x to its decimal value.
-                                                     //!<  if i is a varname, e.g. 'a', assign x to a corresponding value from U[26].
-          *s?y(                                      //!<  if the noun is not the last token on tape, we assume the next token could only be a verb, therefore we
-               e(s+1),Q(y)                           //!<  recursively evaluate a token AFTER the next one, and put result into y. if y is error code, bail out.
-                                                     //!<  at this point, x and y hold nouns from left and right of the next token, therefore:
-               F[v(*s)](x,y))                        //!<  treat the next token as dyadic verb and apply it to x and y. return valie can be either noun or error.
-            :x))                                     //!< end of tape: return the noun in x.
+          e(s),Q(x)                                  //!<   recursively evaluate next token after i and put result into x. bail out on error.
+          f[v(i)](x))                                //!<   apply monadic verb i to the operand x and return the result, which can be either noun or error.
+        :x(n(i),Qp(Q==x)                             //!< in case if i is not a verb, it must be a valid noun, and we assign its value to x.
+           Qp(*s&&!v(*s))                            //!<   if there are more tokens on take, the next token after a noun can only be a verb.
+           *s?y(e(s+1),Q(y)                          //!<   recursively evaluate the token to the right of the verb and put result into y. bail out on error.
+                F[v(*s)](x,y))                       //!<   apply dyadic verb at *s to nouns x and y. return value can be noun or error.
+             :x))                                    //!<   end of tape: return the noun in x (last token can only be a noun).
 
-int main(){c s[99];                                  //!< entry point: k/simple accepts no arguments, buffer s holds repl input (max 99 chars).
- w((u)"k/simple (c) 2024 atw/kpc mit"),w(10);        //!< write startup banner, copyright and license, followed by a newline (ascii 10).
- while(1)                                            //!< enter repl (read-eval-print loop) forever until ctrl+c or segfault is caught.
+int main(){w(ba);c s[99];                            //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
+ while(1)                                            //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
   if(w(32),s[read(0,s,99)-1]=0,*s)                   //!< write prompt (single space), then wait for input from stdin which is read into s.
-    w_(e(s));                                        //!< (e)valuate input, pretty-print the result to stdout, and cycle the repl.
-                                                     //!< \note that the last byte of repl input is forced to null byte aka sentinel value.
- R 0;}                                               //!< in c, main() must return an exit code of the process (0 is 'success' by convention).
+    x(*s,x=g(x)&&s[1]==':'?x:0;                      //!< if input starts with global assignment e.g. a:42, retain variable name in x.
+      y(e(s+2*!!x),                                  //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
+       $(x&&y-Q,U[x-97]=y)                           //!< if assignment is pending and eval was successful, store result U and suppress output,
+        w_(y)));                                     //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
+ R 0;}                                               //!< in c, main() must return an exit code of the process (by convention, 0 is 'success').
 
 //:~

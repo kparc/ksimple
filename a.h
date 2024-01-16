@@ -70,7 +70,9 @@ u Q=96;                                                  //!< Q is magic number 
 #define Q(e)  if(Q==(e))R Q;                             //!< if some e evaluates to Q, return error
 #define Qr(e) if(e){R err((u)__func__,(u)"rank");}       //!< if some e evaluates to true, throw rank error
 #define Qz(e) if(e){R err((u)__func__,(u)"nyi");}        //!< ditto for not yet implemented
+#define Qp(e) if(e){R err((u)__func__,(u)"parse");}      //!< ditto for parse error
 #define Ql()          err((u)__func__,(u)"length")       //!< throw length error unconditionally
+
 
 //!all of the above coming together:
 #define r(n,e) _(u r=a(n);i(n,ri=e)r)                    //!< (r)esult macro is the foundation of k/simple and is ubiqutous in a.c. it reads:
@@ -81,5 +83,7 @@ u Q=96;                                                  //!< Q is magic number 
                                                          //!< u x=r(8,2*i);        //!< x is (0,2,4,6,8,10,12,14)
                                                          //!< u f=r(8,pow(2,i));   //!< f is (1,2,4,8,16,32,64,128,256)
                                                          //!< u y=r(8,xi==fi);     //!< y is (0,1,1,0,0,0,0,0)
+
+u ba=(u)"k/simple (c) 2024 atw/kpc mit\n";               //!< startup banner
 
 //:~
