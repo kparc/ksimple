@@ -61,7 +61,7 @@ F(Cnt,Qr(!af)r(f,ax?x:sx[i%nx]))                    //!< dyadic f#x is (tak)e, w
                                                     //!<  if x is an atom, return a vector of length f filled with x.
 
 F(Cat,                                              //!< dyadic f,x is (cat)enate: a) join two vectors b) join an atom to vector c) make a vector from two atoms.
-  f=af?cat(f):f;                                    //!< if f is an atom, enlist it \ see cat()
+  f=af?cat(f):f;                                    //!< if f is an atom, enlist it \see cat()
   x=ax?cat(x):x;                                    //!< ditto for x
   u r=a(nf+nx);                                     //!< (a)llocate array r long enough to hold f and x.
   m(nx,r+nf,x);m(nf,r,f))                           //!< (m)ove (or more precisely, copy) contents of f and x to r, one after another, and return pointer to r.
@@ -114,7 +114,7 @@ int main(){c s[99];w(ba);                           //!< entry point. print bann
    if(w(32),s[read(0,s,99)-1]=0,*s)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
      x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:42, retain variable name in x.s
        y(e(s+2*!!x),                                //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
-        $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result in [] and suppress output,
+        $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result in U[] and suppress output,
          w_(y)));                                   //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
   R 0;}                                             //!< in c, main() must return an exit code of the process (by convention, 0 is 'success').
 
