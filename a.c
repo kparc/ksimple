@@ -97,7 +97,7 @@ f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                    //!< is x a (n)oun? valid no
                                                     //!< if i is a digit, e.g. '7', n() returns its decimal value.
                                                     //!< if i is a varname, e.g. 'a', n() returns its value U[26].
 
-//! eval / repl
+//!eval
 us(e,                                               //!< (e)val: recursively tokenize and evaluate input tape s, and return the final result:
     u i=*s++;                                       //!< read the current token into i and advance tape.
     v(i)?x(                                         //!< in case if i is a valid verb:
@@ -109,6 +109,7 @@ us(e,                                               //!< (e)val: recursively tok
                 F[v(*s)](x,y))                      //!<   apply dyadic verb at *s to nouns x and y. return value can be noun or error.
              :x))                                   //!<   end of tape: return the noun in x (last token can only be a noun).
 
+//!repl
 int main(){c s[99];w(ba);                           //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
   while(1)                                          //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
    if(w(32),s[read(0,s,99)-1]=0,*s)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
