@@ -41,8 +41,12 @@ this repository, which serve a number of purposes:
    for a handful cosmetic enhancements which have been discussed with
    atw and are seen as beneficial to the cause. the net amount of
    non-cosmetic changes made to [ref/a.c](/ref/a.c) should be in range of 20-25 keystrokes.
+   a number of less trivial one-line functions (e.g. `e()`) are presented
+   in "exploded view" to simplify discussion of their control flow and role
+   of individual components.
 
-4. with the help of the included [makefile](/makefile), kparc's "essay" can
+
+4. with help of the included [makefile](/makefile), kparc's "essay" can
    be built to any available architecture, e.g. arm, riscv, wasm32 or extensa.
    default make target assumes presence of a recent gcc, clang or tinyc compiler.
    there are also two additional handy build targets: `make mm`, which

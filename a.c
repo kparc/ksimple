@@ -98,13 +98,13 @@ f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                    //!< is x a (n)oun? valid no
                                                     //!< if i is a varname, e.g. 'a', n() returns its value U[26].
 
 //! eval / repl
-us(e,                                               //!< (e)val: recursively tokenize input tape s, evaluate it and return the final result:
+us(e,                                               //!< (e)val: recursively tokenize and evaluate input tape s, and return the final result:
     u i=*s++;                                       //!< read the current token into i and advance tape.
     v(i)?x(                                         //!< in case if i is a valid verb:
           e(s),Q(x)                                 //!<   recursively evaluate next token after i and put result into x. bail out on error.
           f[v(i)](x))                               //!<   apply monadic verb i to the operand x and return the result, which can be either noun or error.
         :x(n(i),Qp(Q==x)                            //!< in case if i is not a verb, it must be a valid noun, and we assign its value to x.
-           Qp(*s&&!v(*s))                           //!<   if there are more tokens on take, the next token after a noun can only be a verb.
+           Qp(*s&&!v(*s))                           //!<   if there are more tokens on tape, the next token after a noun can only be a verb.
            *s?y(e(s+1),Q(y)                         //!<   recursively evaluate the token to the right of the verb and put result into y. bail out on error.
                 F[v(*s)](x,y))                      //!<   apply dyadic verb at *s to nouns x and y. return value can be noun or error.
              :x))                                   //!<   end of tape: return the noun in x (last token can only be a noun).
@@ -112,9 +112,9 @@ us(e,                                               //!< (e)val: recursively tok
 int main(){c s[99];w(ba);                           //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
   while(1)                                          //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
    if(w(32),s[read(0,s,99)-1]=0,*s)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
-     x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:42, retain variable name in x.
+     x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:42, retain variable name in x.s
        y(e(s+2*!!x),                                //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
-        $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result U and suppress output,
+        $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result in [] and suppress output,
          w_(y)));                                   //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
   R 0;}                                             //!< in c, main() must return an exit code of the process (by convention, 0 is 'success').
 

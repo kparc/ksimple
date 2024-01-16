@@ -71,7 +71,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 #define Qr(e) if(e){R err((u)__func__,(u)"rank");}       //!< if some e evaluates to true, throw rank error
 #define Qz(e) if(e){R err((u)__func__,(u)"nyi");}        //!< ditto for not yet implemented
 #define Qp(e) if(e){R err((u)__func__,(u)"parse");}      //!< ditto for parse error
-#define Ql()          err((u)__func__,(u)"length")       //!< throw length error unconditionally
+#define Ql()          err((u)__func__,(u)"length")       //!< throw length error
 
 
 //!all of the above coming together:
@@ -85,6 +85,6 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
                                                          //!< u y=r(8,xi==fi);     //!< y is (0,1,1,0,0,0,0,0)
 
 u Q=96,                                                  //!< Q is magic number for error (ascii for `backtick)
-  ba=(u)"k/simple (c) 2024 atw/kpc mit\n";               //!< startup banner
+  ba=(u)"k/simple (c) 2024 atw/kpc\n";                   //!< startup banner
 
 //:~
