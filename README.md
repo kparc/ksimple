@@ -1,4 +1,6 @@
-# k/simple: a tiny k interpreter for educational purposes by arthur whitney
+# k/simple
+
+a tiny k interpreter for educational purposes by arthur whitney
 
 ## target audience
 
