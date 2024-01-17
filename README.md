@@ -8,13 +8,14 @@ the contents of this repository assume a readership who have read and
 understood [k&r](https://en.wikipedia.org/wiki/The_C_Programming_Language)
 at some point in their careers. any experience with using interpreters of
 vector languages is beneficial but not necessary. any experience with
-**implementing** vector language interpreters would definitely help a lot.
+**implementing** language interpreters would definitely of help.
 
 ## background
 
 in early january 2024, a group of motivated individuals asked arthur whitney
 to demonstrate the fundamentals of the design, organization and style of his
-method of writing c in the most succinct and approachable way possible.
+method of writing interpreters in c in the most succinct and approachable 
+way possible.
 
 about a day later, arthur offered a tiny interpreter of a toy vector 
 language, implemented in about 25 lines of c with a small header file.
@@ -24,7 +25,7 @@ a few days later, the regents of kparc were invited to share their
 impressions on this codebase, and optionally provide some additional 
 commentary.
 
-such commentary is offered in form of two files `a.[ch]` in the root of 
+our commentary is offered in form of two files `a.[ch]` in the root of 
 this repository, which serve a number of purposes:
 
 1. both files can be seen as two chapters of a small "essay", header
@@ -85,7 +86,31 @@ $ vim k.c
 
 ```
 
-## language specification
+## language specification aka disclaimer
+
+*caveat emptor*, and manage your expectations. this interpreter is useless for any practical purpose except of the one declared, which is education. the language is as follows:
+
+* although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. That is, k expression is composed of **verbs** and **nouns**.
+
+* the definition of **verb** is something in between definitons of **operation** in mathematics and **operator** in computer science. to make things simple, we define "verb" as an instruction to the interpreter to 
+  do something with exactly one or exactly two operands, aka **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
+  sentences:
+
+  "shuffle this deck of cards"
+  "take three random cards from this deck"
+
+  in linguistics, the structure of the first sentence is known as verb-only predicate, while the second is a verb-plus-direct-object predicate
+
+  in k, we recognize the verb "shuffle" in the first sentence to be monadic, while the second is a dyadic verb "take". the semantics of an action of a verb is defined by the number of operands given to it, also 
+  called "rank" or "valence". this means that monadic `+x` and dyadic `x+y` have two entirely different meanings.
+
+* a **verb** in k/simple can be either an **atom** (aka scalar value) or a **vector** (aka ordered list of atoms).
+
+* the one and only type of **atom** formally supported by k/simple is a signed 8-bit integer (-127,127).
+
+* a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
+
+* k/simple supports 6 verbs, `+`, `-`, `!`, `#` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are defined and implemented.
 
 [WIP]
 
