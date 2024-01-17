@@ -75,7 +75,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 
 
 //!all of the above coming together:
-#define r(n,e) _(u r=a(n);i(n,ri=e)r)                    //!< (r)esult macro is the foundation of k/simple and is ubiqutous in a.c. it reads:
+#define r(n,e) _(u r=a(n);i(n,ri=e)r)                    //!< (r)esult macro is the foundation of k/simple and is ubiquitous in a.c. it reads:
                                                          //!< (a)llocate a new vector r of size n, then apply some (e)xpression to it, then return r.
 
                                                          //!< here are few basic examples to illustrate what "apply" means:
