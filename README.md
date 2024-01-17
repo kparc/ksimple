@@ -88,12 +88,12 @@ $ vim k.c
 
 ## language specification / disclaimer
 
-*caveat emptor*, and manage your expectations. this interpreter is useless for any practical purpose except of the one declared, which is education. the language is as follows:
+*caveat emptor*, and manage your expectations. this interpreter is useless for any practical purpose except the stated one, which is education. the language is as follows:
 
 * although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. That is, k expression is composed of **verbs** and **nouns**.
 
 * the definition of **verb** is something in between definitons of **operation** in mathematics and **operator** in computer science. to make things simple, we define "verb" as an instruction to the interpreter to 
-  do something with exactly one or exactly two operands, aka **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
+  do something with exactly one or exactly two operands, or **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
   sentences:
 
   * **shuffle this deck of cards**
@@ -110,7 +110,7 @@ $ vim k.c
 
 * a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
 
-* k/simple supports 5 verbs, `+`, `-`, `!`, `#` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are defined and implemented.
+* k/simple supports 5 verbs, `+`, `-`, `!`, `#` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are also declared and defined.
 
 * k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, "left of right". this nonsense only sounds silly until you get lit:
 
