@@ -96,13 +96,13 @@ $ vim k.c
   do something with exactly one or exactly two operands, aka **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
   sentences:
 
-  "shuffle this deck of cards"
-  "take three random cards from this deck"
+  * **shuffle this deck of cards**
+  * **take three random cards from this deck**
 
-  in linguistics, the structure of the first sentence is known as verb-only predicate, while the second is a verb-plus-direct-object predicate
-
-  in k, we recognize the verb "shuffle" in the first sentence to be monadic, while the second is a dyadic verb "take". the semantics of an action of a verb is defined by the number of operands given to it, also 
-  called "rank" or "valence". this means that monadic `+x` and dyadic `x+y` have two entirely different meanings.
+  in linguistics, the structure of the first sentence is known as verb-only predicate, while the second is a verb-plus-direct-object predicate.
+  in k, we recognize the verb "shuffle" in the first sentence to be monadic, while the second is a dyadic verb "take". the semantics of an action
+  of a verb is defined by the number of operands given to it, also called "rank" or "valence". this means that monadic `+x` and dyadic `x+y` have
+  two entirely different meanings.
 
 * a **verb** in k/simple can be either an **atom** (aka scalar value) or a **vector** (aka ordered list of atoms).
 
