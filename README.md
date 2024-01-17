@@ -86,7 +86,7 @@ $ vim k.c
 
 ```
 
-## language specification aka disclaimer
+## language specification / disclaimer
 
 *caveat emptor*, and manage your expectations. this interpreter is useless for any practical purpose except of the one declared, which is education. the language is as follows:
 
