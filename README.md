@@ -112,6 +112,17 @@ $ vim k.c
 
 * k/simple supports 6 verbs, `+`, `-`, `!`, `#` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are defined and implemented.
 
+* k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, "left of right". this nonsense only sounds silly until you get lit:
+
+```
+ 3+2+1     /"take 1, add 2, add 3"
+6
+
+ 3*2+1     /"take 1, add 2, multiply by 3"
+9
+```
+
+
 [WIP]
 
 ## suggested exercise
