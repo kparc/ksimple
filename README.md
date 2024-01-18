@@ -132,9 +132,7 @@ x:x+1
 x
  43
 ```
-
-
-[WIP]
+* no memory management is implemented and no garbage is collected. that is, k/simple devours memory and never releases, which is fine because it does it with a teaspoon. if you're not happy with that, it brings you conveniently to the next section of this README.
 
 ## suggested exercise
 
