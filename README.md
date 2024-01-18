@@ -138,7 +138,7 @@ x
 
 the authors hope that this material enables and inspires further experimentation on reader's own, which is a very rewarding and fun pastime. for example, one might consider the following toy problems of various degrees of difficulty:
 
-**simple:**
+**i'm too young to die:**
 
 * implement a few more simple verbs, e.g. dyadic `f*x`.
 * modify repl to support the exit command (traditionally, a double backslash `\\`)
