@@ -115,10 +115,10 @@ $ vim k.c
 * k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, *left of right*. this only sounds nonsensical until you get lit:
 
 ```
- 3+2+1     /"take 1, add 2, add 3"
+ 3+2+1     /take 1, add 2, add 3
 6
 
- 3*2+1     /"take 1, add 2, multiply by 3"
+ 3*2+1     /take 1, add 2, multiply by 3
 9
 ```
 
