@@ -66,9 +66,9 @@ F(Cat,                                              //!< dyadic f,x is (cat)enat
   u r=a(nf+nx);                                     //!< (a)llocate array r long enough to hold f and x.
   m(nx,r+nf,x);m(nf,r,f))                           //!< (m)ove (or more precisely, copy) contents of f and x to r, one after another, and return pointer to r.
 
-F(At,Qr(af)ax?x>nf?Ql():sf[x]:r(nx,sf[xi]))         //!< dyadic f@x is "needle at x in the haystack f" and has two modes based on the type of x (f must be a vector):
-                                                    //!<  if x is an atom, return the x'th item of f.
-                                                    //!<  if x is a vector, return a vector containg items from f at indices listed in x.
+F(At,Qr(af)                                         //!< dyadic f@x is "needle at x in the haystack f" and has two modes based on the type of x (f must be a vector):
+  ax?x>nf?Ql():sf[x]                                //!<  if x is an atom, return the x'th item of f.
+    :r(nx,sf[xi]))                                  //!<  if x is a vector, return a vector containg items from f at indices listed in x.
                                                     //!< \note that the second mode currently doesn't perform the boundary check, fell free to implement it!
 
 f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
