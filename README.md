@@ -4,7 +4,7 @@ a tiny k interpreter for educational purposes by arthur whitney
 
 ## target audience
 
-the contents of this repository assume a readership who have read and 
+the contents of this repository assume readership who have read and 
 understood [k&r](https://en.wikipedia.org/wiki/The_C_Programming_Language)
 at some point in their careers. any experience with using interpreters of
 vector languages is beneficial but not necessary. any experience with
@@ -57,9 +57,9 @@ this repository, which serve a number of purposes:
    removes kparc remarks from the code except for the most essential markup,
    while the `make m` target removes it completely and restores the formatting
    to resemble the original as close as possible for the ease of reference.
-   these build targets produce files `a.min.c` and `a.m.c` respectively,
-   build them, and perform a bitwise diff to ensure all three resulting 
-   binaries are identical.
+   these build targets assume presence of a python interpreter and 
+   produce files `a.min.c` and `a.m.c` respectively, build them, and perform
+   a bitwise diff to ensure all three resulting binaries are identical.
 
 ## quick start
 
