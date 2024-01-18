@@ -51,8 +51,8 @@ this repository, which serve a number of purposes:
    using professional equipment.
 
 5. with help of the included [makefile](/makefile), kparc's "essay" can
-   be built to any available architecture, e.g. arm, riscv, wasm32 or extensa.
-   default make target assumes presence of a recent gcc, clang or tinyc compiler.
+   be built to any available architecture, e.g. riscv, arm, wasm32, xtensa
+   or even x86. default make target assumes presence of a recent gcc, clang or tinyc compiler.
    there are also two additional handy build targets: `make mm`, which
    removes kparc remarks from the code except for the most essential markup,
    while the `make m` target removes it completely and restores the formatting
