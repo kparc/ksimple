@@ -34,7 +34,7 @@ this repository, which serve a number of purposes:
    which is strictly line by line, but also takes a few liberties and
    diversions in a bid to elucidate the "bigger picture" behind this tiny piece of code.
 
-3. for the ease of comprehension, the enclosed narrative has been made
+3. for the ease of comprehension, the narrative has been made
    **completely linear**, and hopefully makes for an easy, entertaining and
    useful read. to make this possible, the original code had seen some
    very minor restructuring and regrouping; however, no refactoring,
@@ -90,7 +90,7 @@ $ vim k.c
 
 *caveat emptor*, manage your expectations. this interpreter is useless for any practical purpose except the stated one, which is education. the language is as follows:
 
-* although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. That is, k expression is composed of **verbs** and **nouns**.
+* although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. that is, k expression is composed of **verbs** and **nouns**.
 
 * the definition of **verb** is something in between definitons of **operation** in mathematics and **operator** in computer science. to make things simple, we define *verb* as an instruction to the interpreter to 
   do something with exactly one or exactly two operands, or **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
@@ -112,7 +112,7 @@ $ vim k.c
 
 * k/simple supports 5 verbs, `+`, `-`, `!`, `#` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are also declared and defined.
 
-* k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, "left of right". this nonsense only sounds silly until you get lit:
+* k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, *left of right*. this only sounds nonsensical until you get lit:
 
 ```
  3+2+1     /"take 1, add 2, add 3"
