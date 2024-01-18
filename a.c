@@ -113,7 +113,7 @@ us(e,                                               //!< (e)val: recursively tok
 int main(){c s[99];w(ba);                           //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
   while(1)                                          //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
    if(w(32),s[read(0,s,99)-1]=0,*s)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
-     x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:42, retain variable name in x.s
+     x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:7, retain variable name in x.
        y(e(s+2*!!x),                                //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
         $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result in U[] and suppress output,
          w_(y)));                                   //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
