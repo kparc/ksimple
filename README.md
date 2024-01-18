@@ -122,7 +122,7 @@ $ vim k.c
 9
 ```
 
-* k/simple is simple enough to get away without implementation of a tokenizer and parser. instead, it accepts user input as a string of up to 99 tokens, and evaluiates it token by token strictly left of right (see above). a token in k/simple is a single character, which can be either a verb `[+-!#@`,a noun `0..9` or a name of a global variable `abc..xyz`.
+* k/simple is simple enough to get away without tokenizer and parser. instead, it accepts user input as a string of up to 99 tokens, and evaluiates it token by token strictly left of right (see above). a token in k/simple is a single character, which can be either a verb `[+-!#@`,a noun `0..9` or a name of a global variable `abc..xyz`.
 
 * assignment of a value to a global variable is not a verb, and is not `=`. instead, it is `:`. for example:
 
