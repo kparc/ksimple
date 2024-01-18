@@ -12,7 +12,7 @@ vector languages is beneficial but not necessary. any experience with
 
 ## background
 
-in early january 2024, a group of motivated individuals asked arthur whitney
+in early january 2024, a group of motivated individuals asked [arthur whitney](https://en.wikipedia.org/wiki/Arthur_Whitney_(computer_scientist))
 to demonstrate the fundamentals of the design, organization and style of his
 method of writing interpreters in c in the most succinct and approachable 
 way possible.
