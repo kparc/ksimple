@@ -152,7 +152,7 @@ the authors hope that this material enables and inspires further experimentation
 
 **ultraviolence:**
 
-* change base type from 8bit integer to `signed long`
+* change base type from 8bit integer to `long long`
 * fix tokenizer to support integer numerals greater than 9 and less than 0
 * fix tokenizer to support efficient direct vector input (e.g. `42 57 1010` instead of `1,2,3,4`)
 * implement memory management by refcounting
