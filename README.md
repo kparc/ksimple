@@ -136,7 +136,7 @@ x
 
 ## suggested exercise
 
-the authors hope that this material enables and inspires further experimentation on reader's own, which is a very rewarding and fun pastime. for example, one might consider the following toy problems of various degrees of difficulty:
+the authors hope that this material enables and inspires further experimentation on reader's own, which can be a very rewarding and fun pastime. for example, one might consider the following toy problems of various degrees of difficulty:
 
 **i'm too young to die:**
 
