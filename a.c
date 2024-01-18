@@ -95,7 +95,7 @@ f(v,(strchr(V,x)?:V)-V)                             //!< is x a valid (v)erb fro
                                                     //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
 f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                    //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase ascii chars abc..xyz.
                                                     //!< if i is a digit, e.g. '7', n() returns its decimal value.
-                                                    //!< if i is a varname, e.g. 'a', n() returns its value U[26].
+                                                    //!< if i is a varname, e.g. 'a', n() returns its value from U[26].
 
 //!eval
 us(e,                                               //!< (e)val: recursively tokenize and evaluate input tape s, and return the final result:
