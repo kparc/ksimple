@@ -88,7 +88,7 @@ $ vim k.c
 
 ## language specification / disclaimer
 
-*caveat emptor*, and manage your expectations. this interpreter is useless for any practical purpose except the stated one, which is education. the language is as follows:
+*caveat emptor*, manage your expectations. this interpreter is useless for any practical purpose except the stated one, which is education. the language is as follows:
 
 * although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. That is, k expression is composed of **verbs** and **nouns**.
 
