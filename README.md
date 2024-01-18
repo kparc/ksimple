@@ -142,7 +142,7 @@ the authors hope that this material enables and inspires further experimentation
 
 * implement a few more simple verbs, e.g. dyadic `f*x`.
 * modify repl to support the exit command (traditionally, a double backslash `\\`)
-* add workspace size monitor (i.e. memory allocation) to e.g. prompt or via extra command (`\w`)
+* add workspace size monitor (i.e. memory allocation) e.g. to prompt or via extra command (`\w`)
 
 **hurt me plenty:**
 
