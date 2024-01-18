@@ -110,7 +110,7 @@ $ vim k.c
 
 * a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
 
-* k/simple supports 5 verbs, `+`, `-`, `!`, `#` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are also declared and defined.
+* k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/.a.c) where they are also declared and defined.
 
 * k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, *left of right*. this only sounds nonsensical until you get lit:
 
