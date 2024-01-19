@@ -31,7 +31,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 //!minimal atwc
 #define R return                                         //!< unclutter
 #define $(a,b) if(a)b;else                               //!< handy shorthand for if-then-else. beware of dangling else!
-#define i(n,e) {int $n=n;int i=0;for(;i<$n;++i){e;}}     //!< execute expression e n times, loop counter i is accessible from e
+#define i(n,e) {int $n=n;int i=0;for(;i<$n;++i){e;}}     //!< (i)terate: execute (e)xpression n times, loop counter i is accessible from e
 
 #define _(e) ({e;})                                      //!< isolate expression e in its own lexical scope and clamp it with ;
                                                          //!< note the outer parens, which is a very powerful c trick: they turn _(e) into a so called
