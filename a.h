@@ -67,12 +67,12 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 #define fi x(f,xi)                                       //!< return i'th element of vector f or 0 if i is out of bounds
 
 //!error handling
-#define Q(e)  if(Q==(e))R Q;                             //!< if some e evaluates to Q, return error
-#define Qr(e) if(e){R err((u)__func__,(u)"rank");}       //!< if some e evaluates to true, throw rank error
-#define Qz(e) if(e){R err((u)__func__,(u)"nyi");}        //!< ditto for not yet implemented
-#define Qp(e) if(e){R err((u)__func__,(u)"parse");}      //!< ditto for parse error
-#define Ql()          err((u)__func__,(u)"length")       //!< throw length error
-
+#define Q(e)    if(Q==(e))R Q;                           //!< if some e evaluates to Q, return error
+#define Qs(e,s) if(e)R err((u)__func__,(u)s);            //!< error template: if some e evaluates to true, throw an error
+#define Qr(e)   Qs(e,"rank")                             //!< if some e evaluates to true, throw rank error
+#define Qz(e)   Qs(e,"nyi")                              //!< ..not yet implemented
+#define Qp(e)   Qs(e,"parse")                            //!< ..parse error
+#define Ql()  _(Qs(1,"length")Q)                         //!< length error
 
 //!all of the above coming together:
 #define r(n,e) _(u r=a(n);i(n,ri=e)r)                    //!< (r)esult macro is the foundation of k/simple and is ubiquitous in a.c. it reads:
