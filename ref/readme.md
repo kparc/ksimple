@@ -1,3 +1,61 @@
+# 2024.01.16 (#2)
+## a.h
+```c
+typedef char*s,c;s Q=(s)128;
+#define _(e...) ({e;})
+#define x(a,e...) _(s x=a;e)
+#define $(a,b) if(a)b;else
+#define i(n,e) {int $n=n;int i=0;for(;i<$n;++i){e;}}
+
+#define Q(e) if(Q==(e))return Q;
+#define Qs(e,s) if(e)return err(__func__,s);
+#define Qr(e) Qs(e,"rank")
+#define Qd(e) Qs(e,"domain")
+#define Qz(e) Qs(e,"nyi")
+
+#define _s(f,e,x...) s f(x){return _(e);}
+#define _i(f,e) _s(f,e,c x)
+#define f(f,e)  _s(f,e,s x)
+#define F(f,e)  _s(f,e,s a,s x)
+
+#define ax (256>x)
+#define ix (c)x
+#define nx x[-1]
+#define xi x[i]
+
+#define aa x(a,ax)
+#define ia x(a,ix)
+#define na x(a,nx)
+
+#define oo w("oo\n")
+```
+## a.c
+```c
+#include"a.h"//fF[+-!#,@] atom/vector 1byte(int/token) clang-13 -Os -oa a.c -w 
+#define r(n,e) _(s r=m(n);i(n,r[i]=e)r)
+f(w,write(1,ax?&x:x,ax?1:strlen(x));x)F(err,w(a);w((s)58);w(x);w((s)10);Q)
+_i(wi,s b[5];sprintf(b,"%d ",x);w(b);0)
+f(W,Q(x)$(ax,wi(ix))i(nx,wi(xi))w(10);x)
+
+f(srt,Qz(1)0)f(uni,Qz(1)0)F(Cut,Qz(1)0)F(Drp,Qz(1)0)_i(m,s a=malloc(1+x);*a++=x;a)
+#define A(c) ((s)memchr(a,c,na)?:a+na)-a
+#define g(a,v) ax?255&a:r(nx,v)
+f(not,g(!ix,!xi))f(sub,g(-ix,-xi))F(At,Qr(aa)g(a[ix],a[xi]))F(_A,Qr(aa)g(A(ix),A(xi)))
+f(ind,Qr(!ax)0>ix?r(-ix,-ix-1-i):r(ix,i))F(Ind,Qr(!aa)Qd(1>ia)g(ix%ia,xi%ia))
+#define G(f,o) F(f,ax?aa?255&ia o ix:Ltn==f?f(sub(x),sub(a)):f(x,a):r(nx,(aa?ia:a[i])o xi))
+G(Ltn,<)G(Eql,==)G(Not,!=)G(Sum,+)G(Prd,*)G(And,&)G(Or,|)
+f(cat,Qr(!ax)r(1,ix))F(Cat,a=aa?cat(a):a;x=ax?cat(x):x;s r=m(na+nx);memcpy(r+na,x,nx);memcpy(r,a,na))
+f(at,At(x,0))f(rev,Qr(ax)At(x,ind(255&-nx)))f(cnt,Qr(ax)nx)
+F(Tak,Qr(!aa||ax)Qd(0>ia||ia>nx)At(x,ind(a)))F(Sub,Sum(a,sub(x)))F(Mtn,Ltn(x,a))f(qz,Qz(1)0)
+#define v(e) ((strchr(V,e)?:V)-V)
+s U[26],V=" +-*&|<>=~!@?#_^,",
+(*f[])()={0,abs,sub,qz ,qz,rev,qz ,qz, qz ,not,ind,at,uni,cnt,qz ,srt,cat},
+(*F[])()={0,Sum,Sub,Prd,And,Or,Ltn,Mtn,Eql,Not,Ind,At,_A ,Tak,Drp,Cut,Cat};
+_i(n,10u>x-48?x-48:26u>x-97?U[x-97]:0)
+f(e,s z=x;c i=*z++;!*z?n(i):v(i)?x(e(z),Q(x)f[v(i)](x)):x(e(z+1),Q(x)58==*z?U[i-97]=x:_(c f=v(*z);Qd(!f)F[f](n(i),x))))
+int main(){c b[99];while(1)if(w(32),b[read(0,b,99)-1]=0,*b)58==b[1]?e(b):W(e(b));}
+```
+
 # 2024.01.16
 ## a.h
 ```c
@@ -51,7 +109,6 @@ _i(n,10u>x-48?x-48:26u>x-97?U[x-97]:0)
 f(e,s z=x;c i=*z++;!*z?n(i):v(i)?x(e(z),Q(x)f[v(i)](x)):x(e(z+1),Q(x)58==*z?U[i-97]=x:_(c f=v(*z);Qd(!f)F[f](n(i),x))))
 int main(){c b[99];while(1)if(w(32),b[read(0,b,99)-1]=0,*b)58==b[1]?e(b):W(e(b));}
 ```
-
 
 # 2024.01.12
 ## a.h
