@@ -64,7 +64,7 @@ this repository, which serve a number of purposes:
 ## quick start
 
 ```
-$ cd && git clone git@github.com:kparc/ksimple.git
+$ cd && git clone https://github.com/kparc/ksimple
 $ cd ksimple && make
 $ ./a
 k/simple (c) 2024 atw/kpc
