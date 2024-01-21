@@ -106,7 +106,7 @@ $ vim k.c
 
 * a **verb** in k/simple can be either an **atom** (aka scalar value) or a **vector** (aka ordered list of atoms).
 
-* the one and only type of **atom** formally supported by k/simple is a signed 8-bit integer (-127,127).
+* the one and only type of **atom** formally supported by k/simple is a signed 8-bit integer `-128..127`.
 
 * a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
 
@@ -126,16 +126,17 @@ $ vim k.c
   for example, multiplication doesn't bind stronger than addition, and doesn't get computed first. the lack of precedence is not what we've all learned very early in our careers, but it actually works pretty well.
 
 * k/simple is simple enough to get away without tokenizer and parser. instead, it accepts user input as a string of up to 99 tokens, and evaluates it token by token strictly left of right (see above). a token in k/simple 
-  is a single character, which can be either a verb `+-!#,@`,a noun `0..9` or a name of a global variable `abc..xyz` are also nouns.
+  is a single character, which can be either a verb `+-!#,@`, a noun `0..9` or a name of a global variable `abc..xyz` which are also treated as nouns.
 
-* assignment of a value to a global variable is not a verb, and is not `=`. instead, it is `:`. for example:
+* assignment of a value to a global variable is not a verb, and it is not `=`. instead, it is a special case and is `:`. for example:
 
 ```
-x:42
+x:4
 x:x+1
 x
- 43
+ 5
 ```
+
 * no memory management is implemented and no garbage is collected. that is, k/simple devours memory and never releases it, which is fine because it does it with a teaspoon. if you're not happy with that, it brings you conveniently to the next section of this README.
 
 ## suggested exercise
