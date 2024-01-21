@@ -8,7 +8,7 @@ the contents of this repository assume readership who have read and
 understood [k&r](https://en.wikipedia.org/wiki/The_C_Programming_Language)
 at some point in their careers. any experience with using interpreters of
 vector languages is beneficial but not necessary. any experience with
-**implementing** language interpreters would definitely be of help.
+implementing language interpreters would definitely be of help.
 
 ## background
 
