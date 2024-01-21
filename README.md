@@ -110,7 +110,7 @@ $ vim k.c
 
 * a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
 
-* k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` and `@`, all of which have different meanings depending on their **rank**. these meanings are very well documented in [a.c](/a.c) where they are also declared and defined.
+* k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` and `@`, all of which have different meanings depending on their *rank*. these meanings are very well documented in [a.c](/a.c) where they are also declared and defined.
 
 * k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, *left of right*. this only sounds nonsensical until you get lit:
 
@@ -122,9 +122,11 @@ $ vim k.c
 9
 ```
 
-This also means that there is only one operator precededence rule to be learned in k/simple: there are no precedence rules to be learned in k/simple. all operators have the same binding strength, including arithmetic. for example, multiplication doesn't bind stronger than addition, and doesn't get computed first. the lack of precedence is not what we've all learned very early in our careers, but it actually works pretty well.
+* This also means that there is only one operator precededence rule to be learned in k/simple: there are no precedence rules to be learned in k/simple. all operators have the same binding strength, including arithmetic. 
+  for example, multiplication doesn't bind stronger than addition, and doesn't get computed first. the lack of precedence is not what we've all learned very early in our careers, but it actually works pretty well.
 
-* k/simple is simple enough to get away without tokenizer and parser. instead, it accepts user input as a string of up to 99 tokens, and evaluates it token by token strictly left of right (see above). a token in k/simple is a single character, which can be either a verb `+-!#,@`,a noun `0..9` or a name of a global variable `abc..xyz`.
+* k/simple is simple enough to get away without tokenizer and parser. instead, it accepts user input as a string of up to 99 tokens, and evaluates it token by token strictly left of right (see above). a token in k/simple 
+  is a single character, which can be either a verb `+-!#,@`,a noun `0..9` or a name of a global variable `abc..xyz` are also nouns.
 
 * assignment of a value to a global variable is not a verb, and is not `=`. instead, it is `:`. for example:
 
