@@ -92,7 +92,7 @@ $ vim k.c
 
 * although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. that is, k expression is composed of **verbs** and **nouns**.
 
-* the definition of **verb** is something in between definitons of **operation** in mathematics and **operator** in computer science. to make things simple, we define *verb* as an instruction to the interpreter to 
+* the definition of **verb** is something in between definitions of **operation** in mathematics and **operator** in computer science. to make things simple, we define *verb* as an instruction to the interpreter to 
   do something with exactly one or exactly two operands, or **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
   sentences:
 
