@@ -137,6 +137,9 @@ x
  5
 ```
 
+* global namespace `a..z` is very useful, and has an unusual feature: you can assign a value to a global in a traditional way `x:2`,
+  or do it *inline*, as in `x:1+y:2`, which is the same as `y:2` followed by `x:1+y`. one expression, two assignments.
+
 * no memory management is implemented and no garbage is collected. that is, k/simple devours memory and never releases it, which is fine because it does it with a teaspoon. if you're not happy with that, it brings you conveniently to the next section of this README.
 
 ## suggested exercise

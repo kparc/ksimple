@@ -20,9 +20,9 @@ c b[12];                                            //!< temporary string (b)uff
 f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));b)       //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
                                                     //!< if x is in 0..127 print it as is, otherwise offset it by 256 into the negative range.
 f(wi,w(si(x)))                                      //!< (w)rite (i)nteger: format x and (w)rite it to stdout.
-f(w_,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))              //!< (w)rite to repl: if x is an atom, format and print it, otherwise print all items of vector x,
+f(W,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))              //!<  pretty print x: if x is an atom, format and print it, otherwise print all items of vector x,
                                                     //!< separated by space. terminate output by a newline aka ascii 10.
-F(err,w(f);w(58);w(x);w(10);Q)                      //!< throw error: print the name of the (f)unction where error occured, followed by colon(58),
+G(err,w(f);w(58);wi(x);w(y);w(10);Q)                //!< (err)or: print the name of the c (f)unction where error occured, line number and error string,
                                                     //!< followed by error message x (eg "rank"/"nyi"), terminated by a newline. \return Q aka error code.
 
 //!memory management
@@ -92,31 +92,33 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of poin
 //!globals, verbs, nouns
 f(g,x>='a'&&x<='z')                                 //!< is x a valid (g)lobal variable identifier?
 f(v,(strchr(V,x)?:V)-V)                             //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
-                                                    //!< \note a rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
-f(n,10>x-48?x-48:g(x)?U[x-97]:Q)                    //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase ascii chars abc..xyz.
-                                                    //!< if i is a digit, e.g. '7', n() returns its decimal value.
-                                                    //!< if i is a varname, e.g. 'a', n() returns its value from U[26].
+                                                    //!< \note rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
+f(n,10>x-48                                         //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase varnames a..z.
+           ?x-48                                    //!< if x is a digit, e.g. '7', n() returns its decimal value.
+           :g(x)?U[x-97]                            //!< if x is a varname, e.g. 'a', n() returns its value from U[26].
+                :Q)                                 //!< ..anything else is an error.
 
-//!eval
-us(e,                                               //!< (e)val: recursively tokenize and evaluate input tape s, and return the final result:
-    u i=*s++;                                       //!< read the current token into i and advance tape.
-    v(i)?x(                                         //!< in case if i is a valid verb:
-          e(s),Q(x)                                 //!<   recursively evaluate next token after i and put result into x. bail out on error.
-          f[v(i)](x))                               //!<   apply monadic verb i to the operand x and return the result, which can be either noun or error.
-        :x(n(i),Qp(Q==x)                            //!< in case if i is not a verb, it must be a valid noun, and we assign its value to x.
-           Qp(*s&&!v(*s))                           //!<   if there are more tokens on tape, the next token after a noun can only be a verb.
-           *s?y(e(s+1),Q(y)                         //!<   recursively evaluate the token to the right of the verb and put result into y. bail out on error.
-                F[v(*s)](x,y))                      //!<   apply dyadic verb at *s to nouns x and y. return value can be noun or error.
-             :x))                                   //!<   end of tape: return the noun in x (last token can only be a noun).
-
+ us(e,                                              //!< (e)val: recursively tokenize and evaluate input tape s, and return the final result:
+    c*t=s;c i=*t++;                                 //!< t is a temporary pointer to s. read the current token into i and advance temporary tape pointer.
+    !*t?x(n(i),Qp()x)                               //!< if next token after i is null (ie end of tape): final token must be a noun, so return it, otherwise:
+       :v(i)?x(                                     //!< in case if i is a valid verb:
+               e(t),Q(x)                            //!<   recursively evaluate next token after i and put resultint noun into x. bail out on error.
+               f[v(i)](x))                          //!<   apply monadic verb i to the operand x and return the result, which can be either nounmn or error.
+            :y(                                     //!< in case if i is not a verb, it must be a valid noun, and the next token after a noun should be a verb,
+               e(t+1),Q(y)                          //!<   recursively evaluate next token to the right of the verb and put result into y. bail out on error.
+               58==*t                               //!<   special case: if y is preceded by a colon instead of a verb, it is an inline assignment (eg 1+a:1),
+                     ?x(g(i),Qp()U[i-97]=y)         //!<   so i should be a valid (g)lobal a..z. if so, store y in U[26] and return it. if not, throw parse error.
+                     :x(n(i),Qp()                   //!<   x is a noun to the left of the verb. throw parse error if it is invalid.
+                          c f=v(*t);Qd(!f)          //!<   f is the index of the verb to the left of noun y. if it's not a valid verb, throw domain error.
+                          F[f](x,y))))              //!< apply dyadic verb f to nouns x and y (e.g. 2+3) and return result (noun or error)
+ 
 //!repl
-int main(){c s[99];w(ba);                           //!< entry point. print banner, buffer s will hold repl input up to 99 chars.
+int main(){c b[99];w(ba);                           //!< entry point. print benner, buffer b will hold user input up to 99 chars.
   while(1)                                          //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
-   if(w(32),s[read(0,s,99)-1]=0,*s)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
-     x(*s,x=g(x)&&s[1]==':'?x:0;                    //!< if input starts with global assignment e.g. a:7, retain variable name in x.
-       y(e(s+2*!!x),                                //!< (e)valuate input string, optionally skipping first two tokens in case of assignment.
-        $(x&&y-Q,U[x-97]=y)                         //!< if assignment is pending and eval was successful, store result in U[] and suppress output,
-         w_(y)));                                   //!< otherwise, pretty-print evaluation result to stdout and cycle repl.
-  R 0;}                                             //!< in c, main() must return an exit code of the process (by convention, 0 is 'success').
+   if(w(32),b[read(0,b,99)-1]=0,*b)                 //!< write prompt (single space), then wait for input from stdin which is read into s.
+    x(e(b),                                         //!< evaluate buffer b into x, otherwise:
+      58==b[1]?x                                    //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
+              :W(x));                               //!<     otherwise, pretty print evaluation result to stdout and cycle repl.
+  R 0;}                                             //!< in c, return value of main() is the exit code of the process, 0 is success.
 
 //:~

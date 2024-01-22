@@ -43,8 +43,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 #define _u(f,e,x...) u f(x){R(u)_(e);}                   //!< generic function definition template: f name, x args, e body, all functions return some u
 #define f(g,e) _u(g,e,u x)                               //!< define a monadic function g: takes arg x of type u and returns some u, e is body
 #define F(g,e) _u(g,e,u f,u x)                           //!< define a dyadic function g: takes args f and x of type u, returns some u, or:
-                                                         //!< define an adverb g: takes function pointer f to some verb and its only arg x (nyi)
-#define G(g,e) _u(g,e,u f,u x,u y)                       //!< define an adverb g: takes function pointer f, x and y are the args, returns some u (nyi)
+#define G(g,e) _u(g,e,u f,u x,u y)                       //!< define an adverb g: takes a pointer to a verb f, x and y are operands, returns some u (nyi)
 #define us(f,e) _u(f,e,c*s)                              //!< define a function f which takes a string s as its only argument, e is body
 
 //!accessors for x
@@ -68,11 +67,13 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
 
 //!error handling
 #define Q(e)    if(Q==(e))R Q;                           //!< if some e evaluates to Q, return error
-#define Qs(e,s) if(e)R err((u)__func__,(u)s);            //!< error template: if some e evaluates to true, throw an error
+#define Qe(s)   err((u)__func__,(u)__LINE__,(u)s)        //!< shortcut for err(): pass function name and error string s
+#define Qs(e,s) if(e)R Qe(s);                            //!< error template: if some e evaluates to true, throw an error
 #define Qr(e)   Qs(e,"rank")                             //!< if some e evaluates to true, throw rank error
 #define Qz(e)   Qs(e,"nyi")                              //!< ..not yet implemented
-#define Qp(e)   Qs(e,"parse")                            //!< ..parse error
-#define Ql()  _(Qs(1,"length")Q)                         //!< length error
+#define Qd(e)   Qs(e,"domain")                           //!< domain error
+#define Qp()    Qs(Q==x,"parse")                         //!< parse error
+#define Ql()    Qe("length")                             //!< length error
 
 //!all of the above coming together:
 #define r(n,e) _(u r=a(n);i(n,ri=e)r)                    //!< (r)esult macro is the foundation of k/simple and is ubiquitous in a.c. it reads:
@@ -84,7 +85,7 @@ typedef unsigned char c;typedef unsigned long long u;    //!< type c is just a s
                                                          //!< u f=r(8,pow(2,i));   //!< f is (1,2,4,8,16,32,64,128,256)
                                                          //!< u y=r(8,xi==fi);     //!< y is (0,1,1,0,0,0,0,0)
 
-u Q=96,                                                  //!< Q is magic number for error (ascii for `backtick)
+u Q=128,                                                 //!< Q is magic number for error
   ba=(u)"k/simple (c) 2024 atw/kpc\n";                   //!< startup banner
 
 //:~
