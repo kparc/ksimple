@@ -104,7 +104,7 @@ $ vim k.c
   of a verb is defined by the number of operands given to it, also called "rank" or "valence". this means that monadic `+x` and dyadic `x+y` have
   two entirely different meanings.
 
-* a **verb** in k/simple can be either an **atom** (aka scalar value) or a **vector** (aka ordered list of atoms).
+* a **noun** in k/simple can be either an **atom** (aka scalar value) or a **vector** (aka ordered list of atoms).
 
 * the one and only type of **atom** formally supported by k/simple is a signed 8-bit integer `-128..127`.
 
