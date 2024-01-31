@@ -1,10 +1,10 @@
 //!\file k.c \brief bare minimum atw-style k interpreter for learning purposes \copyright (c) 2024 arthur whitney and the regents of kparc \license mit
-#include"a.h"                                       //fF[+-!#,@] atom/vector 1byteint 1bytetoken  no(parser tokens ..) cc -Os -oa a.c -w
+#include"a.h"                                       //fF[+-!#,@|] atom/vector 1byteint 1bytetoken  no(parser tokens ..) cc -Os -oa a.c -w
 
                                                     //! above is a brief description of k/simple system by atw:
                                                     //! he says:       he means:
-                                                    //! fF[+-!#,@]     we have 6 verbs [+ - ! # , @] in both monadic and dyadic contexts, total of 12
-                                                    //!                (since monadic plus is nyi, we actually have 11, feel free to implement f[+])
+                                                    //! fF[+-!#,@]     we have 6 verbs [+ - ! # , @ |] in both monadic and dyadic contexts, total of 14
+                                                    //!                (since monadic + and dyadic | are nyi, we actually have 12, feel free to implement f[+]/F[|])
                                                     //! atom/vector    k/simple sports atoms and vectors!
                                                     //! 1byteint       the only supported atom/vector type is 8bit integer, so beware of overflows
                                                     //! 1bytetoken     input tokenizer is spartan: a token can't be longer than one char
@@ -38,7 +38,7 @@ f(_r,ax?x                                           //!< decrement refcount: if 
           :_a(x))                                   //!<   if refcount is 0, release memory occupied by x and return 0.
 
 //!monadic verbs
-f(foo,_r(x);Qz(1);Q)                                //!< (foo)bar is a dummy monadic verb: for any x, throw nyi error and return error code Q.
+f(foo,_r(x);Qz(1);Q)F(Foo,_r(x);Qz(1);Q)            //!< (foo)bar is a dummy monadic verb: for any x, throw nyi error and return error code Q.
 
 f(sub,ax?(c)-x:_x(N(nx,-xi)))                       //!< monadic (sub)tract is also known as (neg)ation, or -x: if x is atom, return its additive inverse.
                                                     //!< if x is a vector, return a new vector same as x only with sign of its every element flipped.
@@ -50,6 +50,8 @@ f(cnt,Qr(ax)nx)                                     //!< monadic (c)ou(nt) is #x
 
 f(cat,Qr(!ax)N(1,x))                                //!< monadic (cat)enate is (enl)ist, or comma-x: wraps a given atom x into a new vector of length 1 whose
                                                     //!< only item holds the value of that atom. if x is a vector, enlist will throw a rank error.
+
+f(rev,Qr(ax)_x(N(nx,sx[nx-i-1])))                   //!< monadic (rev)erse is |x and simply returns a mirror copy of vector x.
 
 //!dyadic verbs
 F(Add,                                              //!< dyadic f+y is add. operands can be both atoms and verbs, ie. a+a, a+v, v+a, v+v are all valid.
@@ -81,9 +83,9 @@ F(At,Qr(af)                                         //!< dyadic f@x is "needle a
 f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //!verb dispatch
-char*V=" +-!#,@";                                   //!< V is an array of tokens of all supported k verbs. 0'th item (space) stands for "not a verb".
-u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
- (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At};            //!< F[] is ditto for dyadic versions of verbs listed in V.
+char*V=" +-!#,@|";                                   //!< V is an array of tokens of all supported k verbs. 0'th item (space) stands for "not a verb".
+u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at,rev},         //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
+ (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At,Foo};         //!< F[] is ditto for dyadic versions of verbs listed in V.
 
 
                                                     //!< transposition of V, f[] and F[] gives the following matrix:
@@ -95,6 +97,7 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of poin
                                                     //!<     #   cnt      Cnt     cnt   tak
                                                     //!<     ,   cat      Cat     enl   cat
                                                     //!<     @   at       At      fst   at
+                                                    //!<.    |   rev      foo     rev   foo
 
 //!adverbs
 F(Ovr,ax?x:_x(r(*sx,i(nx-1,r=F[f](r,sx[i+1])))))    //!< adverb over: apply dyadic verb f to all elements of vector x pairwise going left to right.

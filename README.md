@@ -104,7 +104,7 @@ Add:59 length
 
 * a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
 
-* k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` and `@`, all of which have different meanings depending on their *rank*. these meanings are very well documented in [a.c](/a.c) where they are also declared and defined.
+* k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` `@` and `|`, all of which have different meanings depending on their *rank*. these meanings are very well documented in [a.c](/a.c) where they are also declared and defined.
 
 * an **adverb** is a higher-order function: it takes a verb and modifies its action in some desirable way. k/simple implements one adverb `over`, also known as `fold` and `reduce` in 
   functional speak. that is, `over` folds a given vector of values and reduces it into a scalar using a given verb. for example, `+/` reads as "plus over" and computes a sum elements of a given vector:
@@ -190,6 +190,7 @@ the authors hope that this material enables and inspires further experimentation
 * implement a simple parser (e.g. to support quoted strings and parens)
 * implement nested vectors, and verb `flip`
 * make vector arithmetic penetrating
+* implement copy-on-write
 
 **progress takes sacrifice:**
 
