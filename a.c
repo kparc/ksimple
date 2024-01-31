@@ -70,8 +70,8 @@ F(Cat,                                              //!< dyadic f,x is (cat)enat
   f=af?cat(f):f;                                    //!< if f is an atom, enlist it \see cat()
   x=ax?cat(x):x;                                    //!< ditto for x
   u r=a(nf+nx);                                     //!< (a)llocate array r long enough to hold f and x.
-  m(nx,r+nf,x);                                     //!< (m)ove contents of x to the the end of r, try to release x.
-  m(nf,r,f);_r(x);_r(f);r)                          //!< (m)ove contents of f to the beginning of r, try to release f, and return pointer to r.
+  m(nx,r+nf,x);                                     //!< (m)ove contents of x to the the end of r.
+  m(nf,r,f);_r(x);_r(f);r)                          //!< (m)ove contents of f to the beginning of r, try to release f and x, and return pointer to r.
 
 F(At,Qr(af)                                         //!< dyadic f@x is "needle at x in the haystack f" and has two modes based on the type of x (f must be a vector):
   ax?x>nf?Ql():sf[x]                                //!<  if x is an atom, return the x'th item of f.
