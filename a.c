@@ -1,6 +1,5 @@
 //!\file k.c \brief bare minimum atw-style k interpreter for learning purposes \copyright (c) 2024 arthur whitney and the regents of kparc \license mit
-
-#include"a.h"                                       //fF[+-!#,@] atom/vector 1byteint 1bytetoken  no(memmanage parser tokens ..) cc -Os -oa a.c -w
+#include"a.h"                                       //fF[+-!#,@] atom/vector 1byteint 1bytetoken  no(parser tokens ..) cc -Os -oa a.c -w
 
                                                     //! above is a brief description of k/simple system by atw:
                                                     //! he says:       he means:
@@ -9,53 +8,61 @@
                                                     //! atom/vector    k/simple sports atoms and vectors!
                                                     //! 1byteint       the only supported atom/vector type is 8bit integer, so beware of overflows
                                                     //! 1bytetoken     input tokenizer is spartan: a token can't be longer than one char
-                                                    //! no(...)        no memory management, no parser and no tokenizer are implemented
+                                                    //! no(...)        no parser and multichar tokenizer are implemented
                                                     //! cc -w ..       minimal build instructions (which are much more stringent in provided makefile)
+
+//!debug
+f(wu,O("%lu\n",x))                                  //!< (w)rite (u)ll: print unsigned long long (i.e. total memory allocation), useful for refcount debugging.
+void wg(){i(26,x(U[i],$(!ax,O("%c[%d] %d\n",i+97,nx,rx))))} //!< dump global namespace: varname, refcount, length (useful for refcount debugging).
 
 //!printing facilities
 f(w,write(1,ax?(c*)&x:sx,ax?1:strlen(sx)))          //!< (w)rite to stdout: if x is an atom, print its decimal value, otherwise print x as ascii string.
-c b[12];                                            //!< temporary string (b)uffer for storing a formatted vector item.
-                                                    //!< \note it is fine to declare b globally, since k/simple runs on a single thread.
-
-f(si,sprintf(b,"%d ",(int)(128>x?x:x-256));b)       //!< (s)tring from (i)nteger: format a given atom x as decimal into buffer b using sprintf(3):
-                                                    //!< if x is in 0..127 print it as is, otherwise offset it by 256 into the negative range.
+static c pb[12];                                    //!< temporary string (b)uffer for a formatting vector items. ok to declare globally, since we only have one thread.
+f(si,sprintf(pb,"%d ",(int)(128>x?x:x-256));pb)     //!< (s)tring from (i)nteger: format a given atom x as decimal in range (-128..127) into buffer b using sprintf(3).
 f(wi,w(si(x)))                                      //!< (w)rite (i)nteger: format x and (w)rite it to stdout.
-f(W,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))               //!<  pretty print x: if x is an atom, format and print it, otherwise print all items of vector x,
+f(W,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))               //!< pretty print x: if x is an atom, format and print it, otherwise print all items of vector x,
                                                     //!< separated by space. terminate output by a newline aka ascii 10.
 G(err,w(f);w(58);wi(x);w(y);w(10);Q)                //!< (err)or: print name of the c (f)unction where error occured, line number and error msg, return Q.
 
 //!memory management
-G(m,(u)memcpy((void*)x,(void*)y,f))                 //!< (m)ove: x and y are pointers to source and destination, f is number of bytes to be copied from x to y.
+f(a,y(x+2,WS+=x;c*s=malloc(y);*s++=0;*s++=x;s))     //!< (a)llocate x bytes of memory for a vector of length x plus two extra bytes for preamble, set refcount to 0
+                                                    //!< and vector length to x in the preamble, and return pointer to the 0'th element of a new vector \see a.h type system
+f(_a,WS-=nx;free(sx-2);0)                           //!< release memory allocated for vector x.
+G(m,(u)memcpy((c*)x,(c*)y,f))                       //!< (m)ove: x and y are pointers to source and destination, f is number of bytes to be copied from x to y.
                                                     //!< \note memcpy(3) assumes that x/y don't overlap in ram, which in k/simple they can't, but \see memmove(3)
-f(a,c*s=malloc(x+1);*s++=x;(u)s)                    //!< (a)llocate x bytes of memory for a vector of length x plus one extra preamble byte, store the length
-                                                    //!< in the preamble, and return pointer to the 0'th element of a new vector \see a.h type system
+
+//!reference counting
+f(r_,ax?x:(++rx,x))                                 //!< increment refcount: if x is an atom, return x. if x is a vector, increment its refcount and return x.
+f(_r,ax?x                                           //!< decrement refcount: if x is an atom, return x.
+       :rx?(--rx,x)                                 //!<   if x is a vector and its refcount is greater than 0, decrement it and return x.
+          :_a(x))                                   //!<   if refcount is 0, release memory occupied by x and return 0.
 
 //!monadic verbs
-f(foo,Qz(1)Q)                                       //!< (foo)bar is a dummy monadic verb: for any x, throw nyi error and return error code Q.
+f(foo,_r(x);Qz(1);Q)                                //!< (foo)bar is a dummy monadic verb: for any x, throw nyi error and return error code Q.
 
-f(sub,ax?(c)-x:r(nx,-xi))                           //!< monadic (sub)tract is also known as (neg)ation, or -x: if x is atom, return its additive inverse.
+f(sub,ax?(c)-x:_x(N(nx,-xi)))                       //!< monadic (sub)tract is also known as (neg)ation, or -x: if x is atom, return its additive inverse.
                                                     //!< if x is a vector, return a new vector same as x only with sign of its every element flipped.
 
-f(ind,Qr(!ax)r(x,i))                                //!< monadic (ind)ex is her majesty apl iota aka til aka !x. for a given atom x, it returns a vector
+f(ind,Qr(!ax)(N(x,i)))                              //!< monadic (ind)ex is her majesty apl iota aka til aka !x. for a given atom x, it returns a vector
                                                     //!< of x integers from 0 to x-1. if x is not an atom, til throws a rank error.
 
 f(cnt,Qr(ax)nx)                                     //!< monadic (c)ou(nt) is #x. it returns the length of a given vector and throws rank error for atoms.
 
-f(cat,Qr(!ax)r(1,x))                                //!< monadic (cat)enate is (enl)ist, or comma-x: wraps a given atom x into a new vector of length 1 whose
+f(cat,Qr(!ax)N(1,x))                                //!< monadic (cat)enate is (enl)ist, or comma-x: wraps a given atom x into a new vector of length 1 whose
                                                     //!< only item holds the value of that atom. if x is a vector, enlist will throw a rank error.
 
-//!dyadic verbs 
+//!dyadic verbs
 F(Add,                                              //!< dyadic f+y is add. operands can be both atoms and verbs, ie. a+a, a+v, v+a, v+v are all valid.
   ax?af?(c)(f+x)                                    //!< case a+a: if (f,x) are atoms, compute their sum and handle possible overflows by downcasting it to c.
        :Add(x,f)                                    //!< case v+a: if f is a vector and x is an atom, make a recursive call with operands swapped, i.e. a+v.
-    :af?_(i(nx,sx[i]+=f)x)                          //!< case a+v: if f is an atom, modify vector x in place by adding f to its every element and return x.
-       :nx-nf?Ql()                                  //!< case v+v: if (f,x) are vectors, first make sure they are of the same length, throw length error if not.
-             :r(nx,xi+fi))                          //!<           if lengths are the same, return a new vector holding their pairwise sum.
+    :af?_x(N(nx,f+xi))                              //!< case a+v: if f is an atom, return a new vector constructed by adding f to every element of x.
+       :nx-nf?(_x(_f(Ql())))                        //!< case v+v: if (f,x) are vectors, first make sure they are of the same length, throw length error if not.
+             :_f(_x(N(nx,xi+fi))))                  //!<           if lengths are the same, return a new vector holding their pairwise sum.
                                                     //!< \note by convention, atwc uses x-y for inequality test, which has the same effect as nx!=nf.
 
 F(Sub,Add(f,sub(x)))                                //!< dyadic f-x is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
-F(Ind,Qr(!f||!af)ax?x%f:r(nx,xi%f))                 //!< dyadic f!x is x (mod)ulo f, aka remainder operation. f must be an non-zero atom, x can be anything.
-F(Cnt,Qr(!af)r(f,ax?x:sx[i%nx]))                    //!< dyadic f#x is (tak)e, which has two variants based on the type of right opearnd (left must be atom):
+F(Ind,Qr(!f||!af)ax?x%f:_x(N(nx,xi%f)))             //!< dyadic f!x is x (mod)ulo f, aka remainder operation. f must be an non-zero atom, x can be anything.
+F(Cnt,Qr(!af)_f(N(f,ax?x:sx[i%nx])))                //!< dyadic f#x is (tak)e, which has two variants based on the type of right operand (left must be atom):
                                                     //!<  if x is a vector, return first f items of x. if f exceeds the size of x, wrap around from the start.
                                                     //!<  if x is an atom, return a vector of length f filled with x.
 
@@ -63,20 +70,20 @@ F(Cat,                                              //!< dyadic f,x is (cat)enat
   f=af?cat(f):f;                                    //!< if f is an atom, enlist it \see cat()
   x=ax?cat(x):x;                                    //!< ditto for x
   u r=a(nf+nx);                                     //!< (a)llocate array r long enough to hold f and x.
-  m(nx,r+nf,x);m(nf,r,f))                           //!< (m)ove (or more precisely, copy) contents of f and x to r, one after another, and return pointer to r.
+  m(nx,r+nf,x);                                     //!< (m)ove contents of x to the the end of r, try to release x.
+  m(nf,r,f);_r(x);_r(f);r)                          //!< (m)ove contents of f to the beginning of r, try to release f, and return pointer to r.
 
 F(At,Qr(af)                                         //!< dyadic f@x is "needle at x in the haystack f" and has two modes based on the type of x (f must be a vector):
   ax?x>nf?Ql():sf[x]                                //!<  if x is an atom, return the x'th item of f.
-    :r(nx,sf[xi]))                                  //!<  if x is a vector, return a vector containg items from f at indices listed in x.
+    :_x(_f(N(nx,sf[xi]))))                          //!<  if x is a vector, return a vector containg items from f at indices listed in x.
                                                     //!< \note that the second mode currently doesn't perform the boundary check, fell free to implement it!
 
 f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //!verb dispatch
-char*V=" +-!#,@";                                   //!< V is an array of tokens of all supported k verbs. 0'th item (space) is nop.
+char*V=" +-!#,@";                                   //!< V is an array of tokens of all supported k verbs. 0'th item (space) stands for "not a verb".
 u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
- (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At},            //!< F[] is ditto for dyadic versions of verbs listed in V.
- U[26];                                             //!< global namespace: array of values of variables abc..xyz. in c, global arrays are initialized with zeroes.
+ (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At};            //!< F[] is ditto for dyadic versions of verbs listed in V.
 
                                                     //!< transposition of V, f[] and F[] gives the following matrix:
 
@@ -90,14 +97,24 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of poin
 
 //!globals, verbs, nouns
 f(g,x>='a'&&x<='z')                                 //!< is x a valid (g)lobal variable identifier?
+F(ag,y(U[f],!ay?_a(y):x;r_(U[f]=x)))                //!< (a)ssign (g)lobal: release no longer referenced global object at U[i], and replace it with object x.
 f(v,(strchr(V,x)?:V)-V)                             //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
                                                     //!< \note rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
 f(n,10>x-48                                         //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase varnames a..z.
-           ?x-48                                    //!< if x is a digit, e.g. '7', n() returns its decimal value.
-           :g(x)?U[x-97]                            //!< if x is a varname, e.g. 'a', n() returns its value from U[26].
-                :Q)                                 //!< ..anything else is an error.
+           ?x-48                                    //!< if x is a digit, e.g. '7', return its decimal value.
+           :g(x)?r_(U[x-97])                        //!< if x is a varname, e.g. 'a', return its value from U[26] and increment its refcount.
+                :Q)                                 //!< ..everything else is an error.
 
-us(e,                                               //!< (e)val: recursively tokenize and evaluate input tape s, and return the final result:
+//!fio
+static char*l;u mx=99;FILE*t;                       //!< l is a line buffer, nl is its max length, t is input stream handle.
+us(rl,l=l?:malloc(mx);                              //!< (r)ead(l)ine: reset nl to max line length, allocate buffer l of size nl if not yet allocated.
+   P(!s,l[read(0,l,mx)-1]=0)                        //!< (r)ead: if no filename s is given, read line from stdin up to nl bytes, clamp trailing \n and return 0.
+   t=t?:fopen(s,"r");Qs(!t,s)                       //!< open file s for reading if not yet open, throw error in case of problems.
+   r(getline(&l,&mx,t),                             //!< read next line from stream t into l up to nl bytes.
+     r=r<mx?l[r-('\n'==l[r-1])]=0:Q))               //!< if reached end of file, return Q, otherwise clamp trailing \n and return 0.
+
+//!eval
+us(e,                                               //!< (e)val: recursively evaluate input tape s in reverse order, and return the final result:
    c*t=s;c i=*t++;                                  //!< t is a temporary pointer to s. read the current token into i and advance temporary tape pointer.
    !*t?x(n(i),Qp()x)                                //!< if next token after i is null (ie end of tape): final token must be a noun, so return it, otherwise:
       :v(i)?x(                                      //!< in case if i is a valid verb:
@@ -106,18 +123,23 @@ us(e,                                               //!< (e)val: recursively tok
            :y(                                      //!< in case if i is not a verb, it must be a valid noun, and the next token after a noun should be a verb,
               e(t+1),Q(y)                           //!<   recursively evaluate next token to the right of the verb and put result into y. bail out on error.
               58==*t                                //!<   special case: if y is preceded by a colon instead of a verb, it is an inline assignment (eg 1+a:1),
-                    ?x(g(i),Qp()U[i-97]=y)          //!<   so i should be a valid (g)lobal a..z. if so, store y in U[26] and return it. if not, throw parse error.
+                    ?x(g(i),Qp()ag(i-97,y))         //!<   so i should be a (g)lobal varname a..z. if so, increment y's refcount, store it in U[26], and return it.
                     :x(n(i),Qp()                    //!<   x is a noun to the left of the verb. throw parse error if it is invalid.
                          c f=v(*t);Qd(!f)           //!<   f is the index of the verb to the left of noun y. if it's not a valid verb, throw domain error.
                          F[f](x,y))))               //!< apply dyadic verb f to nouns x and y (e.g. 2+3) and return result (noun or error).
- 
-//!repl
-int main(){c b[99];w(ba);                           //!< entry point. print benner, buffer b will hold user input up to 99 chars.
-  while(1)                                          //!< enter infinite read-eval-print loop until ctrl+c is pressed or segfault is caught.
-   if(w(32),b[read(0,b,99)-1]=0,*b)                 //!< write prompt (single space), then wait for input from stdin which is read into t.
-    x(e(b),                                         //!< evaluate buffer t and put result into x, otherwise:
-      58==b[1]?x                                    //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
-              :W(x));                               //!<     otherwise, pretty print evaluation result to stdout, then cycle repl.
-  R 0;}                                             //!< in c, return value of main() is the exit code of the process, 0 is success.
+
+//!repl/batch
+int main(int c,char**v){u r=2==c;                   //!< entry point: r=0 is repl mode, r=1 is batch mode i.e. when a filename is passed.
+  r?:O("%s",BA);                                    //!< system banner is only printed in interactive mode.
+  while(r?:w(32),Q!=rl(v[1]))                       //!< enter infinite read-eval-print loop until ctrl+c is pressed, error or EOF is reached.
+   if(*l){                                          //!< write prompt (single space), then wait for input from stdin which is read into b.
+    $(92==*l&&!l[2],                                //!< if buffer starts with bashslash and is two bytes long:
+     $(92==l[1],break)                              //!<   if buffer is a double backslash, exit repl and terminate process.
+      $(119==l[1],wu(WS))                           //!<   if buffer is a \w, print workspace usage and cycle repl.
+       $(118==l[1],wg()))                           //!<   if buffer is a \v, print globals and their refcounts (debug).
+        x(e(l),                                     //!< else, evaluate buffer b[] and put result into x, then:
+          58==l[1]?x                                //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
+                  :_x(W(x)));}                      //!<   otherwise, pretty print evaluation result to stdout, then cycle repl.
+  R free(l),fclose(t),0;}                           //!< in c, return value of main() is the exit code of the process, 0 is success.
 
 //:~

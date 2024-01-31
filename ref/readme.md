@@ -60,6 +60,7 @@ f(at,At(x,0))f(rev,Qr(ax)At(x,z(s(-nx))))f(cnt,Qr(ax)_x(s(nx)))
 F(Tak,Qr(!aa||ax)Qd(0>ia||ia>nx)At(x,z(a)))F(Sub,Sum(a,sub(x)))F(Mtn,Ltn(x,a))
 #define v(e) (((s)strchr(V,e)?:V)-V)
 s U[26],V=" +-*&|<>=~!@?#_^,",
+//          +   -   *   &  |   <   >   =   ~   ! @  ?   #   _   ^   ,
 (*f[])()={0,qz ,sub,qz ,qz,rev,qz ,qz, qz ,not,z,at,uni,cnt,qz ,srt,cat},
 (*F[])()={0,Sum,Sub,Prd,And,Or,Ltn,Mtn,Eql,Not,Z,At,_A ,Tak,Drp,Cut,Cat};
 _i(u,10u>x-48?x-48:26u>x-97?r_(U[x-97]):0)

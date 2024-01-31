@@ -40,11 +40,9 @@ this repository, which serve a number of purposes:
    very minor restructuring and regrouping; however, no refactoring,
    no changes to logic or naming conventions have taken place, except 
    for a handful cosmetic enhancements which have been discussed with
-   atw and are seen as beneficial to the cause. the net amount of
-   non-cosmetic changes made to [ref/a.c](/ref/a.c) should be in range of 20-25 keystrokes.
-   a number of less trivial one-line functions (e.g. `e()`) are presented
-   in "exploded view" to simplify discussion of their control flow and role
-   of individual components.
+   atw and are seen as beneficial to the cause. a number of less trivial one-line
+   functions (e.g. `e()`) are presented in "exploded view" to simplify discussion
+   of their control flow and role of individual components.
 
    although the c code of `k/simple` is formatted to fit on mobile phone screens
    in portrait mode, for a more comfortable reading experience we recommend
@@ -52,14 +50,8 @@ this repository, which serve a number of purposes:
 
 5. with help of the included [makefile](/makefile), kparc's "essay" can
    be built to any available architecture, e.g. riscv, arm, wasm32, xtensa
-   or even x86. default make target assumes presence of a recent gcc, clang or tinyc compiler.
-   there are also two additional handy build targets: `make mm`, which
-   removes kparc remarks from the code except for the most essential markup,
-   while the `make m` target removes it completely and restores the formatting
-   to resemble the original as close as possible for the ease of reference.
-   these build targets assume presence of a python interpreter and 
-   produce files `a.min.c` and `a.m.c` respectively, build them, and perform
-   a bitwise diff to ensure all three resulting binaries are identical.
+   or even x86. default make target assumes presence of a recent gcc, clang
+   or tinyc compiler.
 
 ## quick start
 
@@ -71,19 +63,21 @@ k/simple (c) 2024 atw/kpc
  2+2
 4
  x:!9
- y:2+!9
+ y:2+x
  x-y
 -2 -2 -2 -2 -2 -2 -2 -2 -2
  z:x,y
  #z
 18
  x+!3
-Add:length
- x@1,5,7
-1 5 7
+Add:59 length
+ \w
+36
+ x:y:z:0
+ \w
+0
  ^C
-$ vim k.c
-
+ $ vi k.c
 ```
 
 ## language specification / disclaimer
@@ -140,7 +134,27 @@ x
 * global namespace `a..z` is very useful, and has an unusual feature: you can assign a value to a global in a traditional way `x:2`,
   or do it *inline*, as in `x:1+y:2`, which is the same as `y:2` followed by `x:1+y`. one expression, two assignments.
 
-* no memory management is implemented and no garbage is collected. that is, k/simple devours memory and never releases it, which is fine because it does it with a teaspoon. if you're not happy with that, it brings you conveniently to the next section of this README.
+* k/simple implements simple memory management by refcounting. two handy system commands are implemented, which are useful for refcount debugging:
+
+  * `\w` print current workspace size
+  * `\v` print global namespace: varname, refcount, length
+
+* `\\` exits the process.
+
+* k/simple can run in two modes: interactive or batch. batch mode expects a filename of a k script, e.g.:
+
+```
+$ ./a t.k
+-1
+0
+0
+-1
+1 2 3 4 5 6 7 8 9
+2
+0 2 4 6 8 10 12 14 16
+0 -1 -2 -3 -4 -5 -6 -7 -8
+...
+```
 
 ## suggested exercise
 
@@ -160,10 +174,9 @@ the authors hope that this material enables and inspires further experimentation
 
 **ultraviolence:**
 
-* change base type from 8bit integer to `long long`
+* change base type from 8bit integer to `long`
 * fix tokenizer to support integer numerals greater than 9 and less than 0
 * fix tokenizer to support efficient direct vector input (e.g. `42 57 1010` instead of `1,2,3,4`)
-* implement memory management by refcounting
 
 **nightmare:**
 
