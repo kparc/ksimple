@@ -24,14 +24,13 @@ f(W,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))               //!< pretty print x: if x is
                                                     //!< separated by space. terminate output by a newline aka ascii 10.
 G(err,w(f);w(58);wi(x);w(y);w(10);Q)                //!< (err)or: print name of the c (f)unction where error occured, line number and error msg, return Q.
 
-//!memory management
+//!malloc
 f(a,y(x+2,WS+=x;c*s=malloc(y);*s++=0;*s++=x;s))     //!< (a)llocate x bytes of memory for a vector of length x plus two extra bytes for preamble, set refcount to 0
                                                     //!< and vector length to x in the preamble, and return pointer to the 0'th element of a new vector \see a.h type system
 f(_a,WS-=nx;free(sx-2);0)                           //!< release memory allocated for vector x.
 G(m,(u)memcpy((c*)x,(c*)y,f))                       //!< (m)ove: x and y are pointers to source and destination, f is number of bytes to be copied from x to y.
                                                     //!< \note memcpy(3) assumes that x/y don't overlap in ram, which in k/simple they can't, but \see memmove(3)
-
-//!reference counting
+//!memory management
 f(r_,ax?x:(++rx,x))                                 //!< increment refcount: if x is an atom, return x. if x is a vector, increment its refcount and return x.
 f(_r,ax?x                                           //!< decrement refcount: if x is an atom, return x.
        :rx?(--rx,x)                                 //!<   if x is a vector and its refcount is greater than 0, decrement it and return x.
@@ -43,7 +42,7 @@ f(foo,_r(x);Qz(1);Q)F(Foo,_r(x);Qz(1);Q)            //!< (foo)bar is a dummy mon
 f(sub,ax?(c)-x:_x(N(nx,-xi)))                       //!< monadic (sub)tract is also known as (neg)ation, or -x: if x is atom, return its additive inverse.
                                                     //!< if x is a vector, return a new vector same as x only with sign of its every element flipped.
 
-f(ind,Qr(!ax)(N(x,i)))                              //!< monadic (ind)ex is her majesty apl iota aka til aka !x. for a given atom x, it returns a vector
+f(til,Qr(!ax)(N(x,i)))                              //!< monadic til is !x aka her majesty apl iota. for a given atom x, it returns a vector
                                                     //!< of x integers from 0 to x-1. if x is not an atom, til throws a rank error.
 
 f(cnt,Qr(ax)nx)                                     //!< monadic (c)ou(nt) is #x. it returns the length of a given vector and throws rank error for atoms.
@@ -63,8 +62,8 @@ F(Add,                                              //!< dyadic f+y is add. oper
                                                     //!< \note by convention, atwc uses x-y for inequality test, which has the same effect as nx!=nf.
 
 F(Sub,Add(f,sub(x)))                                //!< dyadic f-x is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
-F(Ind,Qr(!f||!af)ax?x%f:_x(N(nx,xi%f)))             //!< dyadic f!x is x (mod)ulo f, aka remainder operation. f must be an non-zero atom, x can be anything.
-F(Cnt,Qr(!af)_f(N(f,ax?x:sx[i%nx])))                //!< dyadic f#x is (tak)e, which has two variants based on the type of right operand (left must be atom):
+F(Mod,Qr(!f||!af)ax?x%f:_x(N(nx,xi%f)))             //!< dyadic f!x is x (mod)ulo f, aka remainder operation. f must be an non-zero atom, x can be anything.
+F(Tak,Qr(!af)_f(N(f,ax?x:sx[i%nx])))                //!< dyadic f#x is (tak)e, which has two variants based on the type of right operand (left must be atom):
                                                     //!<  if x is a vector, return first f items of x. if f exceeds the size of x, wrap around from the start.
                                                     //!<  if x is an atom, return a vector of length f filled with x.
 
@@ -82,28 +81,34 @@ F(At,Qr(af)                                         //!< dyadic f@x is "needle a
 
 f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
+//! note how Sub() and at() are implemented in terms of other verbs, and especially how Add() cuts corners by calling itself with operands swapped.
+//! in fact, Add() serves as a template how to generalize implementation of a whole bunch of other dyadic verbs, provided that they also hold commutative property. in pseudocode:
+
+//! function fn(f,x) implementing a commutative OP:
+//!  1. if both operands f and x are atoms, return (f) OP (x)
+//!  2. if f is an atom and x is a vector, return fn(x,f)
+//!  3. if both operands are vectors, ensure they are the same length.
+//!  4. allocate a (r)esult vector of the same length as x, then:
+//!  5. depending on type of x, each it'h element of r becomes either:
+//!  5.1 (atom x) OP (i'th element of f)
+//!  5.2 (i'th element of x) OP (it'h element of f)
+//!  6. finally, attempt to release memory of f and x, and return r.
+
+#define op(fn,OP) F(fn,ax?af?(c)(f OP x):fn(x,f):af?_x(N(nx,f OP xi)):_f(_x(nx-nf?Ql():N(nx,(ax?x:sx[i]) OP sf[i])))) //!< above pseudocode expressed as a C macro.
+op(Eql,==)op(Not,!=)op(And,&)op(Or,|)op(Prd,*)                //!< and we have definitions of dyadic equal, not equal, and, or and product for free.
+
 //!verb dispatch
-char*V=" +-!#,@|";                                   //!< V is an array of tokens of all supported k verbs. 0'th item (space) stands for "not a verb".
-u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at,rev},         //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
- (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At,Foo};         //!< F[] is ditto for dyadic versions of verbs listed in V.
-
-
-                                                    //!< transposition of V, f[] and F[] gives the following matrix:
-
-                                                    //!<  verb   monadic  dyadic  semantics
-                                                    //!<     +   foo      Add     nyi   add
-                                                    //!<     -   sub      Sub     neg   sub
-                                                    //!<     !   ind      Ind     til   mod
-                                                    //!<     #   cnt      Cnt     cnt   tak
-                                                    //!<     ,   cat      Cat     enl   cat
-                                                    //!<     @   at       At      fst   at
-                                                    //!<.    |   rev      foo     rev   foo
+char*V=" +-!#,@=~&|*";                                        //!< V is an array of tokens of all supported k verbs. 0'th item (space) stands for "not a verb".
+u(*f[])(u  )={0,foo,sub,til,cnt,cat,at,foo,foo,foo,rev,foo},  //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
+ (*F[])(u,u)={0,Add,Sub,Mod,Tak,Cat,At,Eql,Not,And,Or, Prd};  //!< F[] is ditto for dyadic versions of verbs listed in V.
+// V:           +   -   !   #   ,   @  =   ~   &   |   *
 
 //!adverbs
-F(Ovr,ax?x:_x(r(*sx,i(nx-1,r=F[f](r,sx[i+1])))))    //!< adverb over: apply dyadic verb f to all elements of vector x pairwise going left to right.
+F(Ovr,ax?x:_x(r(*sx,i(nx-1,r=F[f](r,sx[i+1])))))                       //!< adverb over: recursively fold dyadic verb f to all elements of vector x going left to right.
+F(Scn,ax?x:_x(r(a(nx),*sr=*sx;i(nx-1,sr[i+1]=F[f](sr[i],sx[i+1])))))   //!< adverb scan: same as over, but produces a vector of intermediate results.
 
 //!adverb dispatch
-char*AV=" /";u(*D[])(u,u)={0,Ovr};                  //!< AV[]/D[] is the same as V[]/F[] only for adverbs.
+char*AV=" /\\";u(*D[])(u,u)={0,Ovr,Scn};            //!< AV[]/D[] is the same as V[]/F[], only for adverbs.
 
 //!globals, verbs, nouns, adverbs
 f(g,x>='a'&&x<='z')                                 //!< is x a valid (g)lobal variable identifier?
@@ -130,7 +135,7 @@ us(e,                                               //!< (e)val: recursively eva
    !*t?x(n(i),Qp()x)                                //!< if next token after i is null (ie end of tape): final token must be a noun, so return it, otherwise:
       :v(i)                                         //!< in case if i is a valid verb:
            ?d(*t)?x(e(t+1),Q(x)                     //!<   if the verb is followed by an adverb, recursively evaluate token after adverb into x. bail out on error.
-                   D[d(*t)](v(i),x))                //!<     dispatch an adverb: first argument is the function pointer to the verb, second is the operand.
+                    D[d(*t)](v(i),x))               //!<     dispatch an adverb: first argument is the index of the the verb, second is the operand.
            :x(e(t),Q(x)                             //!<   otherwise, recursively evaluate next token after verb and put resulting noun into x. bail out on error.
               f[v(i)](x))                           //!<   apply monadic verb i to the operand x and return the result, which can be either nounmn or error.
            :y(                                      //!< in case if i is not a verb, it must be a valid noun, and the next token after a noun should be a verb,
@@ -148,10 +153,11 @@ int main(int c,char**v){u r=2==c;                   //!< entry point: r=0 is rep
    if(*l){                                          //!< write prompt (single space), then wait for input from stdin which is read into b.
     $(92==*l&&!l[2],                                //!< if buffer starts with bashslash and is two bytes long:
      $(92==l[1],break)                              //!<   if buffer is a double backslash, exit repl and terminate process.
-      $(119==l[1],wu(WS))                           //!<   if buffer is a \w, print workspace usage and cycle repl.
-       $(118==l[1],wg()))                           //!<   if buffer is a \v, print globals and their refcounts (debug).
-        x(e(l),                                     //!< else, evaluate buffer b[] and put result into x, then:
-          58==l[1]?x                                //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
+       $(119==l[1],wu(WS))                          //!<   if buffer is a \w, print workspace usage and cycle repl.
+        $(118==l[1],wg()))                          //!<   if buffer is a \v, print globals and their refcounts (debug).
+         $('/'==*l,continue)                        //!< if buffer starts with /, treat the rest of the line as comment and cycle repl.
+          x(e(l),                                   //!< else, evaluate buffer b[] and put result into x, then:
+            58==l[1]?x                              //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
                   :_x(W(x)));}                      //!<   otherwise, pretty print evaluation result to stdout, then cycle repl.
   R free(l),fclose(t),0;}                           //!< in c, return value of main() is the exit code of the process, 0 is success.
 
