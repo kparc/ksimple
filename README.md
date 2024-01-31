@@ -84,7 +84,7 @@ Add:59 length
 
 *caveat emptor*, manage your expectations. this interpreter is useless for any practical purpose except the stated one, which is education. the language is as follows:
 
-* although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. that is, k expression is composed of **verbs** and **nouns**.
+* although k/simple is a computer language, its grammar is defined in terms we normally use to denote parts of human speech. that is, k expression is composed of **nouns**, **verbs** and **adverbs**.
 
 * the definition of **verb** is something in between definitions of **operation** in mathematics and **operator** in computer science. to make things simple, we define *verb* as an instruction to the interpreter to 
   do something with exactly one or exactly two operands, or **nouns**. a verb that takes one noun to operate on is called monadic, and verb that takes two nouns is called dyadic. consider the following two 
@@ -105,6 +105,14 @@ Add:59 length
 * a vector of atoms is limited in length to unsigned 8-bit integer, that is no more than 255 items.
 
 * k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` and `@`, all of which have different meanings depending on their *rank*. these meanings are very well documented in [a.c](/a.c) where they are also declared and defined.
+
+* an **adverb** is a higher-order function: it takes a verb and modifies its action in some desirable way. k/simple implements one adverb `over`, also known as `fold` and `reduce` in 
+  functional speak. that is, `over` folds a given vector of values and reduces it into a scalar using a given verb. for example, `+/` reads as "plus over" and computes a sum elements of a given vector:
+
+  ```
+   +/1,2,3,4,5,6
+  21
+  ```
 
 * k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, *left of right*. this only sounds nonsensical until you get lit:
 

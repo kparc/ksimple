@@ -85,6 +85,7 @@ char*V=" +-!#,@";                                   //!< V is an array of tokens
 u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of pointers to c functions which implement monadic versions of k verbs listed in V.
  (*F[])(u,u)={0,Add,Sub,Ind,Cnt,Cat,At};            //!< F[] is ditto for dyadic versions of verbs listed in V.
 
+
                                                     //!< transposition of V, f[] and F[] gives the following matrix:
 
                                                     //!<  verb   monadic  dyadic  semantics
@@ -95,11 +96,18 @@ u(*f[])(u  )={0,foo,sub,ind,cnt,cat,at},            //!< f[] is an array of poin
                                                     //!<     ,   cat      Cat     enl   cat
                                                     //!<     @   at       At      fst   at
 
-//!globals, verbs, nouns
+//!adverbs
+F(Ovr,ax?x:_x(r(*sx,i(nx-1,r=F[f](r,sx[i+1])))))    //!< adverb over: apply dyadic verb f to all elements of vector x pairwise going left to right.
+
+//!adverb dispatch
+char*AV=" /";u(*D[])(u,u)={0,Ovr};                  //!< AV[]/D[] is the same as V[]/F[] only for adverbs.
+
+//!globals, verbs, nouns, adverbs
 f(g,x>='a'&&x<='z')                                 //!< is x a valid (g)lobal variable identifier?
 F(ag,y(U[f],!ay?_a(y):x;r_(U[f]=x)))                //!< (a)ssign (g)lobal: release no longer referenced global object at U[i], and replace it with object x.
 f(v,(strchr(V,x)?:V)-V)                             //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
                                                     //!< \note rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
+f(d,(strchr(AV,x)?:AV)-AV)                          //!< same as v() for a(d)verbs.
 f(n,10>x-48                                         //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase varnames a..z.
            ?x-48                                    //!< if x is a digit, e.g. '7', return its decimal value.
            :g(x)?r_(U[x-97])                        //!< if x is a varname, e.g. 'a', return its value from U[26] and increment its refcount.
@@ -117,8 +125,10 @@ us(rl,l=l?:malloc(mx);                              //!< (r)ead(l)ine: reset nl 
 us(e,                                               //!< (e)val: recursively evaluate input tape s in reverse order, and return the final result:
    c*t=s;c i=*t++;                                  //!< t is a temporary pointer to s. read the current token into i and advance temporary tape pointer.
    !*t?x(n(i),Qp()x)                                //!< if next token after i is null (ie end of tape): final token must be a noun, so return it, otherwise:
-      :v(i)?x(                                      //!< in case if i is a valid verb:
-              e(t),Q(x)                             //!<   recursively evaluate next token after i and put resulting noun into x. bail out on error.
+      :v(i)                                         //!< in case if i is a valid verb:
+           ?d(*t)?x(e(t+1),Q(x)                     //!<   if the verb is followed by an adverb, recursively evaluate token after adverb into x. bail out on error.
+                   D[d(*t)](v(i),x))                //!<     dispatch an adverb: first argument is the function pointer to the verb, second is the operand.
+           :x(e(t),Q(x)                             //!<   otherwise, recursively evaluate next token after verb and put resulting noun into x. bail out on error.
               f[v(i)](x))                           //!<   apply monadic verb i to the operand x and return the result, which can be either nounmn or error.
            :y(                                      //!< in case if i is not a verb, it must be a valid noun, and the next token after a noun should be a verb,
               e(t+1),Q(y)                           //!<   recursively evaluate next token to the right of the verb and put result into y. bail out on error.
