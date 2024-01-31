@@ -171,12 +171,10 @@ the authors hope that this material enables and inspires further experimentation
 **i'm too young to die:**
 
 * implement a few more simple verbs, e.g. dyadic `f*x`.
-* modify repl to support the exit command (traditionally, a double backslash `\\`)
-* add workspace size monitor (i.e. memory allocation) e.g. to prompt or via extra command (`\w`)
+* inspect verb implementations provided by atw for edge cases, and add checks (which are intentionally omitted)
 
 **hurt me plenty:**
 
-* inspect verb implementations provided by atw for edge cases, and add checks (which are intentionally omitted)
 * extend maximum vector length to `MAX_UINT`
 * find and fix at least three segfaults
 
@@ -184,14 +182,14 @@ the authors hope that this material enables and inspires further experimentation
 
 * change base type from 8bit integer to `long`
 * fix tokenizer to support integer numerals greater than 9 and less than 0
-* fix tokenizer to support efficient direct vector input (e.g. `42 57 1010` instead of `1,2,3,4`)
+* fix tokenizer to support efficient direct vector input (e.g. `42 57 120` instead of `1,2,3,4`)
+* implement adverb `scan`
 
 **nightmare:**
 
 * implement a simple parser (e.g. to support quoted strings and parens)
 * implement nested vectors, and verb `flip`
 * make vector arithmetic penetrating
-* implement adverbs `scan` and `over`
 
 **progress takes sacrifice:**
 
