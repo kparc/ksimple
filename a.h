@@ -21,7 +21,7 @@ typedef unsigned char c;typedef unsigned long u;         //!< type c is a shorth
                                                          //!<            ^ ^ ^
                                                          //!<            | | pointer to x points to its 0'th item, all a's are 8bit wide.
                                                          //!<            | byte prior to 0'th item of x holds the length of x (max 255 items).
-                                                         //!<            byte prior to vector length holds the (r)reference count.
+                                                         //!<            byte prior to vector length holds the (r)eference count.
 
 //!minimal atwc
 #define R return                                         //!< unclutter
