@@ -12,8 +12,8 @@
                                                     //! cc -w ..       minimal build instructions (which are much more stringent in provided makefile)
 
 //!debug
-f(wu,O("%lu\n",x))                                  //!< (w)rite (u)ll: print unsigned long long (i.e. total memory allocation), useful for refcount debugging.
-void wg(){i(26,x(U[i],$(!ax,O("%c[%d] %d\n",i+97,nx,rx))))} //!< dump global namespace: varname, refcount, length (useful for refcount debugging).
+f(wu,O("%lu\n",x))                                  //!< (w)rite (u)ll: print unsigned long long (e.g. total memory allocation), useful for refcount debugging.
+void wg(){i(26,x(U[i],$(!ax,O("%c[%d] %d\n",i+97,nx,rx))))} //!< dump global namespace: varname, refcount, length (also useful for refcount debugging).
 
 //!printing facilities
 f(w,write(1,ax?(c*)&x:sx,ax?1:strlen(sx)))          //!< (w)rite to stdout: if x is an atom, print its decimal value, otherwise print x as ascii string.
@@ -71,7 +71,7 @@ F(Cat,                                              //!< dyadic f,x is (cat)enat
   f=af?cat(f):f;                                    //!< if f is an atom, enlist it \see cat()
   x=ax?cat(x):x;                                    //!< ditto for x
   u r=a(nf+nx);                                     //!< (a)llocate array r long enough to hold f and x.
-  m(nx,r+nf,x);                                     //!< (m)ove contents of x to the the end of r.
+  m(nx,r+nf,x);                                     //!< (m)ove contents of x to the end of r.
   m(nf,r,f);_r(x);_r(f);r)                          //!< (m)ove contents of f to the beginning of r, try to release f and x, and return pointer to r.
 
 F(At,Qr(af)                                         //!< dyadic f@x is "needle at x in the haystack f" and has two modes based on the type of x (f must be a vector):
@@ -112,7 +112,7 @@ char*AV=" /\\";u(*D[])(u,u)={0,Ovr,Scn};            //!< AV[]/D[] is the same as
 
 //!globals, verbs, nouns, adverbs
 f(g,x>='a'&&x<='z')                                 //!< is x a valid (g)lobal variable identifier?
-F(ag,y(U[f],!ay?_a(y):x;r_(U[f]=x)))                //!< (a)ssign (g)lobal: release no longer referenced global object at U[i], and replace it with object x.
+F(ag,y(U[f],!ay?_a(y):x;r_(U[f]=x)))                //!< (a)ssign (g)lobal: release no longer referenced global object at U[f], and replace it with object x.
 f(v,(strchr(V,x)?:V)-V)                             //!< is x a valid (v)erb from V? if so, return its index, otherwise return 0.
                                                     //!< \note rarely seen ternary form x?:y, which is just a shortcut for x?x:y in c.
 f(d,(strchr(AV,x)?:AV)-AV)                          //!< same as v() for a(d)verbs.
@@ -130,12 +130,12 @@ us(rl,l=l?:malloc(mx);                              //!< (r)ead(l)ine: reset nl 
      r=r<mx?l[r-('\n'==l[r-1])]=0:Q))               //!< if reached end of file, return Q, otherwise clamp trailing \n and return 0.
 
 //!eval
-us(e,                                               //!< (e)val: recursively evaluate input tape s in reverse order, and return the final result:
+us(e,                                               //!< (e)val: recursively evaluate input tape s in reverse order (left of right), and return the final result:
    c*t=s;c i=*t++;                                  //!< t is a temporary pointer to s. read the current token into i and advance temporary tape pointer.
    !*t?x(n(i),Qp()x)                                //!< if next token after i is null (ie end of tape): final token must be a noun, so return it, otherwise:
       :v(i)                                         //!< in case if i is a valid verb:
            ?d(*t)?x(e(t+1),Q(x)                     //!<   if the verb is followed by an adverb, recursively evaluate token after adverb into x. bail out on error.
-                    D[d(*t)](v(i),x))               //!<     dispatch an adverb: first argument is the index of the the verb, second is the operand.
+                    D[d(*t)](v(i),x))               //!<     dispatch an adverb: first argument is the index of the verb, second is the operand.
            :x(e(t),Q(x)                             //!<   otherwise, recursively evaluate next token after verb and put resulting noun into x. bail out on error.
               f[v(i)](x))                           //!<   apply monadic verb i to the operand x and return the result, which can be either nounmn or error.
            :y(                                      //!< in case if i is not a verb, it must be a valid noun, and the next token after a noun should be a verb,
