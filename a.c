@@ -94,7 +94,7 @@ f(at,At(x,0))                                       //!< monadic @x is simply (f
 //!  5.2 (i'th element of x) OP (it'h element of f)
 //!  6. finally, attempt to release memory of f and x, and return r.
 
-#define op(fn,OP) F(fn,ax?af?(c)(f OP x):fn(x,f):af?_x(N(nx,f OP xi)):_f(_x(nx-nf?Ql():N(nx,(ax?x:sx[i]) OP sf[i])))) //!< above pseudocode expressed as a C macro.
+#define op(fn,OP) F(fn,ax?af?(c)(f OP x):fn(x,f):af?_x(N(nx,f OP xi)):_f(_x(nx-nf?Ql():N(nx,sx[i] OP sf[i])))) //!< above pseudocode expressed as a C macro.
 op(Eql,==)op(Not,!=)op(And,&)op(Or,|)op(Prd,*)                //!< and we have definitions of dyadic equal, not equal, and, or and product for free.
 
 //!verb dispatch

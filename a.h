@@ -43,9 +43,6 @@ typedef unsigned char c;typedef unsigned long u;         //!< type c is a shorth
 #define G(g,e) _u(g,e,u f,u x,u y)                       //!< define an adverb g: takes a pointer to a verb f, x and y are operands, returns some u (nyi)
 #define us(f,e) _u(f,e,c*s)                              //!< define a function f which takes a string s as its only argument, e is body
 
-//!stdlib shortcuts
-#define sl(e) strlen(x(e,sx))                            //!< treat e as string and return its length.
-
 //!accessors for x
 #define ax (256>x)                                       //!< is x an atom? (atoms are 0..255, x presumed to be of type u)
 #define sx ((c*)x)                                       //!< reinterpret x as char pointer (ie as string or byte vector)
