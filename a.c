@@ -82,7 +82,7 @@ F(At,Qr(af)                                         //!< dyadic f@x is "needle a
 f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //! note how Sub() and at() are implemented in terms of other verbs, and especially how Add() cuts corners by calling itself with operands swapped.
-//! in fact, Add() serves as a template how to generalize implementation of a whole bunch of other dyadic verbs, provided that they also hold commutative property. in pseudocode:
+//! in fact, Add() serves as a template for generalizing implementation of a whole bunch of other dyadic verbs, provided that they also hold commutative property. in pseudocode:
 
 //! function fn(f,x) implementing a commutative OP:
 //!  1. if both operands f and x are atoms, return (f) OP (x)
