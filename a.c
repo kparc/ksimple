@@ -122,11 +122,11 @@ f(n,10>x-48                                         //!< is x a (n)oun? valid no
                 :Q)                                 //!< ..everything else is an error.
 
 //!fio
-static char*l;u mx=99;FILE*t;                       //!< l is a line buffer, nl is its max length, t is input stream handle.
-us(rl,l=l?:malloc(mx);                              //!< (r)ead(l)ine: reset nl to max line length, allocate buffer l of size nl if not yet allocated.
-   P(!s,l[read(0,l,mx)-1]=0)                        //!< (r)ead: if no filename s is given, read line from stdin up to nl bytes, clamp trailing \n and return 0.
+static char*l;u mx=99;FILE*t;                       //!< l is a line buffer, mx is its max length, t is input stream handle.
+us(rl,l=l?:malloc(mx);                              //!< (r)ead(l)ine: reset mx to max line length, allocate buffer l of size mx if not yet allocated.
+   P(!s,l[read(0,l,mx)-1]=0)                        //!< (r)ead: if no filename s is given, read line from stdin up to mx bytes, clamp trailing \n and return 0.
    t=t?:fopen(s,"r");Qs(!t,s)                       //!< open file s for reading if not yet open, throw error in case of problems.
-   r(getline(&l,&mx,t),                             //!< read next line from stream t into l up to nl bytes.
+   r(getline(&l,&mx,t),                             //!< read next line from stream t into l up to mx bytes.
      r=r<mx?l[r-('\n'==l[r-1])]=0:Q))               //!< if reached end of file, return Q, otherwise clamp trailing \n and return 0.
 
 //!eval
