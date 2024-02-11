@@ -153,12 +153,12 @@ int main(int c,char**v){u r=2==c;                   //!< entry point: r=0 is rep
    if(*l){                                          //!< write prompt (single space), then wait for input from stdin which is read into b.
     $(92==*l&&!l[2],                                //!< if buffer starts with backslash and is two bytes long:
      $(92==l[1],break)                              //!<   if buffer is a double backslash, exit repl and terminate process.
-       $(119==l[1],wu(WS))                          //!<   if buffer is a \w, print workspace usage and cycle repl.
-        $(118==l[1],wg()))                          //!<   if buffer is a \v, print globals and their refcounts (useful for debug).
-         $('/'==*l,continue)                        //!< if buffer starts with /, treat the rest of the line as comment and cycle repl.
-          x(e(l),                                   //!< else, evaluate buffer b[] and put result into x, then:
-            58==l[1]?x                              //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
-                  :_x(W(x)));}                      //!<   otherwise, pretty print evaluation result to stdout, then cycle repl.
+      $(119==l[1],wu(WS))                           //!<   if buffer is a \w, print workspace usage and cycle repl.
+       $(118==l[1],wg()))                           //!<   if buffer is a \v, print globals and their refcounts (useful for debug).
+        $('/'==*l,continue)                         //!< if buffer starts with /, treat the rest of the line as comment and cycle repl.
+         x(e(l),                                    //!< else, evaluate buffer b[] and put result into x, then:
+           58==l[1]?x                               //!<   if b starts with a global assignment e.g. a:7, suppress output and cycle repl.
+                   :_x(W(x)));}                     //!<   otherwise, pretty print evaluation result to stdout, then cycle repl.
   R free(l),fclose(t),0;}                           //!< in c, return value of main() is the exit code of the process, 0 is success.
 
 //:~
