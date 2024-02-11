@@ -89,7 +89,7 @@ f(at,At(x,0))                                       //!< monadic @x is simply (f
 //!  2. if f is an atom and x is a vector, return fn(x,f)
 //!  3. if both operands are vectors, ensure they are the same length.
 //!  4. allocate a (r)esult vector of the same length as x, then:
-//!  5. depending on type of x, each it'h element of r becomes either:
+//!  5. depending on type of x, each i'th element of r becomes either:
 //!  5.1 (atom x) OP (i'th element of f)
 //!  5.2 (i'th element of x) OP (it'h element of f)
 //!  6. finally, attempt to release memory of f and x, and return r.
@@ -104,7 +104,7 @@ u(*f[])(u  )={0,foo,sub,til,cnt,cat,at,foo,foo,foo,rev,foo},  //!< f[] is an arr
 // V:           +   -   !   #   ,   @  =   ~   &   |   *
 
 //!adverbs
-F(Ovr,ax?x:_x(r(*sx,i(nx-1,r=F[f](r,sx[i+1])))))                       //!< adverb over: recursively fold dyadic verb f to all elements of vector x going left to right.
+F(Ovr,ax?x:_x(r(*sx,i(nx-1,r=F[f](r,sx[i+1])))))                       //!< adverb over: recursively fold all elements of vector x using dyadic verb f going left to right.
 F(Scn,ax?x:_x(r(a(nx),*sr=*sx;i(nx-1,sr[i+1]=F[f](sr[i],sx[i+1])))))   //!< adverb scan: same as over, but produces a vector of intermediate results.
 
 //!adverb dispatch
