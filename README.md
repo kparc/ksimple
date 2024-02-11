@@ -164,6 +164,16 @@ $ ./a t.k
 ...
 ```
 
+## remarks on style
+
+* once the basic principles of the presented coding style become apparent, which takes little time for an experienced C programmer (and often even less for an inexperienced one), things like general tendency to avoid explicit `return`, total absence of `switch/case` construct in favour of of ternary cascades and the `$()` macro is likely to raise some eyebrows. however, these decisions are intentional, because k/simple is considered simple enough to be implemented in simpler C. contrary to popular belief, C isn't always so [simple](https://wordsandbuttons.online/so_you_think_you_know_c.html).
+
+* no less intentional is the hardline policy of keeping vector operands strictly immutable unless they are ready to be disposed of, which is most always the responsibility of a _callee_. indeed, _immutability_ is often seen as a very alien concept by those who are trained to talk to modern computers in imperative mood, even more so to modern compilers. but although it is a valid observation that k/simple sometimes operates on arrays in a less efficient way than it could have, it deliberately omits such optimizations to better emphasize the fact that immutability is an elegant, efficient, and mighty fool-proof idea in a lot of practical scenarios.
+
+* it goes without saying that excessive use of C preprocessor amounts to its abuse and results in unportable, "write-only" code ridden with deadly bugs. that said, k/simple also agrees that disciplined and consistent use of `cpp` results in safer, simpler and more idiomatic code compared to a mound of equivalent vanilla C.
+
+* less code less bug.
+
 ## suggested exercise
 
 the authors hope that this material enables and inspires further experimentation on reader's own, which can be a very rewarding and fun pastime. for example, one might consider the following toy problems of various degrees of difficulty:
