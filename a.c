@@ -90,8 +90,8 @@ f(at,At(x,0))                                       //!< monadic @x is simply (f
 //!  3. if both operands are vectors, ensure they are the same length.
 //!  4. allocate a (r)esult vector of the same length as x, then:
 //!  5. depending on type of x, each i'th element of r becomes either:
-//!  5.1 (atom x) OP (i'th element of f)
-//!  5.2 (i'th element of x) OP (it'h element of f)
+//!     5.1 (atom x) OP (i'th element of f)
+//!     5.2 (i'th element of x) OP (i'th element of f)
 //!  6. finally, attempt to release memory of f and x, and return r.
 
 #define op(fn,OP) F(fn,ax?af?(c)(f OP x):fn(x,f):af?_x(N(nx,f OP xi)):_f(_x(nx-nf?Ql():N(nx,sx[i] OP sf[i])))) //!< above pseudocode expressed as a C macro.
@@ -119,7 +119,7 @@ f(d,(strchr(AV,x)?:AV)-AV)                          //!< same as v() for a(d)ver
 f(n,10>x-48                                         //!< is x a (n)oun? valid nouns are digits 0..9 and lowercase varnames a..z.
            ?x-48                                    //!< if x is a digit, e.g. '7', return its decimal value.
            :g(x)?r_(U[x-97])                        //!< if x is a varname, e.g. 'a', return its value from U[26] and increment its refcount.
-                :Q)                                 //!< ..everything else is an error.
+                :Q)                                 //!< ..anything else is an error.
 
 //!fio
 static char*l;u mx=99;FILE*t;                       //!< l is a line buffer, mx is its max length, t is input stream handle.
