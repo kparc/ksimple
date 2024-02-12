@@ -82,7 +82,8 @@ F(At,Qr(af)                                         //!< dyadic f@x is "needle a
 f(at,At(x,0))                                       //!< monadic @x is simply (f)ir(st): return the head element of x, or throw a rank error if x is an atom.
 
 //! note how Sub() and at() are implemented in terms of other verbs, and especially how Add() cuts corners by calling itself with operands swapped.
-//! in fact, Add() serves as a template for generalizing implementation of a whole bunch of other dyadic verbs, provided that they also hold commutative property. in pseudocode:
+//! in fact, we can use Add() as a template to implement of a whole bunch of additional dyadic verbs, provided that they also hold commutative property.
+//! so let's generalize Add(), first in pseudocode:
 
 //! function fn(f,x) implementing a commutative OP:
 //!  1. if both operands f and x are atoms, return (f) OP (x)
@@ -95,7 +96,7 @@ f(at,At(x,0))                                       //!< monadic @x is simply (f
 //!  6. finally, attempt to release memory of f and x, and return r.
 
 #define op(fn,OP) F(fn,ax?af?(c)(f OP x):fn(x,f):af?_x(N(nx,f OP xi)):_f(_x(nx-nf?Ql():N(nx,sx[i] OP sf[i])))) //!< above pseudocode expressed as a C macro.
-op(Eql,==)op(Not,!=)op(And,&)op(Or,|)op(Prd,*)                //!< and we have definitions of dyadic equal, not equal, and, or and product for free.
+op(Eql,==)op(Not,!=)op(And,&)op(Or,|)op(Prd,*)                //!< et voila, we have definitions of dyadic equal, not equal, and, or and product for free.
 
 //!verb dispatch
 char*V=" +-!#,@=~&|*";                                        //!< V is an array of tokens of all supported k verbs. 0'th item (space) stands for "not a verb".
