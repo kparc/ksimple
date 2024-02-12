@@ -170,6 +170,8 @@ $ ./a t.k
 
 * no less intentional is the hardline policy of keeping vector operands strictly immutable unless they are ready to be disposed of, which is most always the responsibility of a _callee_. indeed, _immutability_ is often seen as a very alien concept by those who are trained to talk to modern computers in imperative mood, even more so to modern compilers. but although it is a valid observation that k/simple sometimes operates on arrays in a less efficient way than it could have, it deliberately omits such optimizations to better emphasize the fact that immutability is an elegant, efficient, and mighty fool-proof idea in a lot of practical scenarios.
 
+* on related note, `x:y:!9` creates two identical objects in memory, which is not the best idea in real life. a much less naive implementation would be `copy-on-write`, which basically means that `x` and `y` would be referring to the same physical object in memory until one of them gets modified _in place_. this is optimization is not implemented since the language provides no means to mutate vectors.
+
 * it goes without saying that excessive use of C preprocessor amounts to its abuse and results in unportable, "write-only" code ridden with deadly bugs. that said, k/simple also agrees that disciplined and consistent use of `cpp` results in safer, simpler and more idiomatic code compared to a mound of equivalent vanilla C.
 
 * less code less bug.
@@ -180,8 +182,8 @@ the authors hope that this material enables and inspires further experimentation
 
 **i'm too young to die:**
 
-* implement a few more simple verbs, e.g. dyadic `f*x`.
 * inspect verb implementations provided by atw for edge cases, and add checks (which are intentionally omitted)
+* implement a few more simple verbs, e.g. dyadic `divide f%x`.
 
 **hurt me plenty:**
 
