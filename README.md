@@ -106,6 +106,8 @@ Add:59 length
 
 * k/simple supports 6 verbs, `+`, `-`, `!`, `#`, `,` `@` and `|`, all of which have different meanings depending on their *rank*. these meanings are very well documented in [a.c](/a.c) where they are also declared and defined.
 
+* in fact, k/simple goes an extra mile to implement a number of additional dyadic ops, namely `=`, `~`, `&`, `|` and `*`, which are implemented all at once in one motion by exploring and then generalizing the implementation of `+` verb. the authors hope for the reader will find the accompanying prose particularly useful.   
+
 * an **adverb** is a higher-order function: it takes a verb and modifies its action in some desirable way. k/simple implements one adverb `over`, also known as `fold` and `reduce` in 
   functional speak. that is, `over` folds a given vector of values and reduces it into a scalar using a given verb. for example, `+/` reads as "plus over" and computes a sum elements of a given vector:
 
@@ -113,6 +115,14 @@ Add:59 length
    +/1,2,3,4,5,6
   21
   ```
+
+ * once `over` is implemented, k/simple can't stand the temptation to show how to implement another staple k adverb, which is `scan`:
+
+ ```
+ /vector of factorials from 1 to 5
+  `*\1+!5`
+ 1 2 6 24 120
+ ```
 
 * k expressions are evaluated in a way you're probably not familiar with, which is *right to left*, or, in math speak, *left of right*. this only sounds nonsensical until you get lit:
 
