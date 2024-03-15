@@ -15,7 +15,7 @@ implementing language interpreters would definitely be of help.
 in early january 2024, a group of motivated individuals asked [arthur whitney](https://en.wikipedia.org/wiki/Arthur_Whitney_(computer_scientist))
 to demonstrate the fundamentals of the design, organization and style of his
 method of writing interpreters in c in the most succinct and approachable 
-way possible.
+way.
 
 about a day later, arthur offered a tiny interpreter of a toy vector 
 language, implemented in about 25 lines of c with a small header file.
