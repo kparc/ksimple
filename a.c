@@ -17,7 +17,7 @@ void wg(){i(26,x(U[i],$(!ax,O("%c[%d] %d\n",i+97,nx,rx))))} //!< dump global nam
 
 //!printing facilities
 f(w,write(1,ax?(c*)&x:sx,ax?1:strlen(sx)))          //!< (w)rite to stdout: if x is an atom, print its decimal value, otherwise print x as ascii string.
-static c pb[12];                                    //!< temporary string (b)uffer for a formatting vector items. ok to declare globally, since we only have one thread.
+static c pb[12];                                    //!< temporary string (b)uffer for formatting vector items. it's ok to declare it globally, since we only have one thread.
 f(si,sprintf(pb,"%d ",(int)(128>x?x:x-256));pb)     //!< (s)tring from (i)nteger: format a given atom x as decimal in range (-128..127) into buffer b using sprintf(3).
 f(wi,w(si(x)))                                      //!< (w)rite (i)nteger: format x and (w)rite it to stdout.
 f(W,Q(x)$(ax,wi(x))i(nx,wi(xi))w(10))               //!< pretty print x: if x is an atom, format and print it, otherwise print all items of vector x,
