@@ -120,7 +120,7 @@ Add:59 length
 
  ```
  /vector of factorials from 1 to 5
-  `*\1+!5`
+  *\1+!5
  1 2 6 24 120
  ```
 
