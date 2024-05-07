@@ -205,21 +205,20 @@ the authors hope that this material enables and inspires further experimentation
 * change base type from 8bit integer to `long`
 * fix tokenizer to support integer numerals greater than 9 and less than 0
 * fix tokenizer to support efficient direct vector input (e.g. `42 57 120` instead of `1,2,3,4`)
-* implement adverb `scan`
+* ~implement adverb `scan`~
 
 **nightmare:**
 
 * implement a simple parser (e.g. to support quoted strings and parens)
-* implement nested vectors, and verb `flip`
+* implement nested vectors, and monadic verb `flip` aka `transpose`
 * make vector arithmetic penetrating
 * implement copy-on-write
-
-**progress takes sacrifice:**
-
 * implement floating point type
 * implement functions and local scope 
 * implement a test suite for your `k`
 
+
+progress takes sacrifice.
 
 `//:~`
 
