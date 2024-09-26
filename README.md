@@ -184,7 +184,7 @@ $ ./a t.k
 
 * it goes without saying that excessive use of C preprocessor amounts to its abuse and results in unportable, "write-only" code ridden with deadly bugs. that said, k/simple also agrees that disciplined and consistent use of `cpp` results in safer, simpler and more idiomatic code compared to a mound of equivalent vanilla C.
 
-* **"less code less bug"**. this means that a possible knee-jerk reaction to fork this repository and refactor it in the key of `N() -> NEW()` is hardly *new* and is considered by many to be highly counterproductive: indeed, three strokes are definitely *worse* than one under small condition that `N()` always means exactly the same thing, is simpler to memorize, and harder to typo. At the same time, we also appreciate the fact that tastes differ, and accept the reality where excess stroking is an acquired taste for the vast majority of keyboard operators, which is now inherited and perpetuated by various automated stroke generators.
+* **"less code less bug"**. this means that a possible knee-jerk reaction to fork this repository and refactor it in the key of `N() -> NEW()` is hardly *new* and is considered by many to be highly counterproductive: indeed, three strokes are definitely *worse* than one under small condition that `N()` always means exactly the same thing, is simpler to memorize, and harder to typo. At the same time, we also appreciate the fact that tastes differ, and accept the reality in which the excess stroking has become an acquired taste for the vast majority of keyboard operators, which is now inherited and perpetuated by various automated stroke generators.
 
 ## suggested exercise
 
