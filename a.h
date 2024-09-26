@@ -69,7 +69,7 @@ typedef unsigned char c;typedef unsigned long u;         //!< type c is a shorth
 #define fi x(f,xi)                                       //!< return i'th element of vector f or 0 if i is out of bounds
 
 //!error handling
-static const u Q=128;                                    //!< magic numer for error
+static const u Q=128;                                    //!< magic number for error
 #define Q(e)    if(Q==(e))R Q;                           //!< if some e evaluates to Q, return error
 #define Qe(s)   err((u)__FUNCTION__,(u)__LINE__,(u)s)    //!< shortcut for err(): pass function name and error string s
 #define Qs(e,s) if(e)R Qe(s);                            //!< error template: if some e evaluates to true, throw an error
@@ -88,7 +88,8 @@ static const u Q=128;                                    //!< magic numer for er
                                                          //!< u f=N(8,pow(2,i));   //!< f is (1,2,4,8,16,32,64,128,256)
                                                          //!< u y=N(8,xi==fi);     //!< y is (0,1,1,0,0,0,0,0)
 
-#define _f(e) r(e,_r(f))                                 //!< execute some (e)xpression, then decrement refcount of f, potentially releasing it, and (r)eturn f.
+#define _f(e) r(e,_r(f))                                 //!< execute some (e)xpression that presumably relies on f,
+                                                         //!< then decrement refcount of f, potentially releasing it, and (r)eturn the expression.
 #define _x(e) r(e,_r(x))                                 //!< ..same for x.
 
                                                          //!< \note it would make sense to redefine u as an alias for uintptr_t to reduce
