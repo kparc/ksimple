@@ -100,9 +100,9 @@ Add:59 length
 
   > and this precisely why we avoid using terms "operator" and especially "operator overloading" to define what a "verb" is. indeed, two verbs denoted by monadic `+` and dyadic `+` are not overloads
   of one another, and although *optically* they use the same **operator** (aimply put, the same _symbol_) they perform two completely different **operations** based on their rank.
-  and the definition of what an **operation** is in k/aimple is mostly identical to its mathematical cousin: it is a well-defined, unambiguous **map** of some inputs to some outputs, 
-  aka *domain* and *range*. while it ia tempting to use a more common term "function" here (which is the same as "map" in mathematics), k/simple has ita reasons to define operations
-  performed by its verba as **maps**, and not just brcause it is shorter to type. the main reason is that definitions of "function" can be wildly differing (if not contradicting outright) depending
+  and the definition of what an **operation** is in k/simple is mostly identical to its mathematical cousin: it is a well-defined, unambiguous **map** of some inputs to some outputs, 
+  aka *domain* and *range*. while it is tempting to use a more common term "function" here (which is the same as "map" in mathematics), k/simple has ita reasons to define operations
+  performed by its verbs as **maps**, and not just because it is shorter to type. the main reason is that definitions of "function" can be wildly differing (if not contradicting outright) depending
   on whom you ask. with **maps** it proves much easier to get on the same page.
 
 * a **noun** in k/simple can be either an **atom** (aka scalar value) or a **vector** (aka ordered list of atoms).
