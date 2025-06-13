@@ -3,7 +3,7 @@
 
                                                     //! above is a brief description of k/simple system by atw:
                                                     //! he says:       he means:
-                                                    //! fF[+-!#,@]     we have 6 verbs [+ - ! # , @ |] in both monadic and dyadic contexts, total of 14
+                                                    //! fF[+-!#,@|]    we have 7 verbs [+ - ! # , @ |] in both monadic and dyadic contexts, total of 14
                                                     //!                (since monadic + and dyadic | are nyi, we actually have 12, feel free to implement f[+]/F[|])
                                                     //! atom/vector    k/simple sports atoms and vectors!
                                                     //! 1byteint       the only supported atom/vector type is 8bit integer, so beware of overflows
@@ -63,7 +63,7 @@ F(Add,                                              //!< dyadic f+y is add. oper
 
 F(Sub,Add(f,sub(x)))                                //!< dyadic f-x is subtract. since we already have Add() and sub(), we get Sub() for free by negating x.
 F(Mod,Qr(!f||!af)ax?x%f:_x(N(nx,xi%f)))             //!< dyadic f!x is x (mod)ulo f, aka remainder operation. f must be an non-zero atom, x can be anything.
-F(Tak,Qr(!af)_f(N(f,ax?x:sx[i%nx])))                //!< dyadic f#x is (tak)e, which has two variants based on the type of right operand (left must be atom):
+F(Tak,Qr(!af)_x(N(f,ax?x:sx[i%nx])))                //!< dyadic f#x is (tak)e, which has two variants based on the type of right operand (left must be atom):
                                                     //!<  if x is a vector, return first f items of x. if f exceeds the size of x, wrap around from the start.
                                                     //!<  if x is an atom, return a vector of length f filled with x.
 
